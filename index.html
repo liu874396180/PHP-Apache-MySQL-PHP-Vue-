@@ -1,0 +1,348 @@
+<html>
+
+	<head>
+		<title>华为商城</title>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/public.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="static/css/elementui.css"/>
+		<link rel="shortcut icon" href="favicon.ico">
+		<script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/vue.js"></script>
+		<script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body style="min-width: 1200px; overflow-x: auto;background: #f5f5f5;">
+		<div id="cdnvue">
+			<div id="" class="top_gg">
+				<a href="">
+					<img src="static/image/top_gg.jpg" />
+				</a>
+			</div>
+			<div id="" class="shortcut">
+				<div class="layout">
+					<div class="s-sub">
+						<ul>
+							<li>
+								<a href="">首页</a>
+							</li>
+							<li>
+								<a href="">华为官网</a>
+							</li>
+							<li>
+								<a href="">荣耀官网</a>
+							</li>
+							<li>
+								<a href="">花粉俱乐部</a>
+							</li>
+							<li>
+								<a href="">帮助中心</a>
+							</li>
+							<li>
+								<a href="">优购码</a>
+							</li>
+							<li>
+								<a href="">企业购</a>
+							</li>
+						</ul>
+					</div>
+					<div class="s-right">
+						<ul>
+							<li>
+								<a href="javascript:void(0)" v-if="!userInfo.userName" @click="dialogFormVisible = true">请登录/注册</a>
+								<a href="javascript:void(0)" v-else>{{userInfo.userName}}</a>
+							</li>
+							<!--<li>
+								<a href="javascript:void(0)" @click="dialogFormVisible = true">注册</a>
+							</li>-->
+							<li>
+								<a href="javascript:void(0)" @click="car">购物车</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--header-->
+			<div class="header">
+				<div id="" class="layout">
+					<div class="left">
+						<div class="logo">
+							<img src="static/image/logo.png" />
+						</div>
+						<div class="naver">
+							<ul id="naver-list">
+								<li id="huawei" class="">
+									<a href="" target="_blank">
+										<span>华为专区</span>
+									</a>
+								</li>
+								<li id="honor" class="">
+									<a href="" target="_blank">
+										<span>荣耀专区</span>
+									</a>
+								</li>
+								<li id="huawei" class="">
+									<a href="" target="_blank">
+										<span>HUAWEI P20</span>
+									</a>
+								</li>
+								<li id="honor" class="">
+									<a href="" target="_blank">
+										<span>荣耀10</span>
+									</a>
+								</li>
+								<li id="huawei" class="">
+									<a href="" target="_blank">
+										<span>nova 3i</span>
+									</a>
+								</li>
+								<li id="honor" class="">
+									<a href="" target="_blank">
+										<span>荣耀V10</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!--导航右边部分-->
+					<div class="right">
+
+					</div>
+				</div>
+			</div>
+			<!--轮播图-->
+			<div id="banner">
+				<div class="swiper-container">
+					<div class="swiper-wrapper" id="box">
+						<div class="swiper-slide"><img src="static/image/banner1.jpg" /></div>
+						<div class="swiper-slide"><img src="static/image/banner2.jpg" /></div>
+						<div class="swiper-slide"><img src="static/image/banner3.jpg" /></div>
+						<div class="swiper-slide"><img src="static/image/banner4.jpg" /></div>
+						<div class="swiper-slide"><img src="static/image/banner5.jpg" /></div>
+					</div>
+					<!-- 如果需要导航按钮 -->
+					<div class="swiper-button-prev swiper-button-white"></div>
+					<div class="swiper-button-next swiper-button-white"></div>
+					<div class="swiper-pagination"></div>
+				</div>
+			</div>
+
+			<div class="show_list">
+				<div class="show_lists">
+					<img src="static/image/8x.png" />
+				</div>
+				<div class="show_lists">
+					<img src="static/image/p20.jpg" />
+				</div>
+				<div class="show_lists">
+					<img src="static/image/nova3.png" />
+				</div>
+				<div class="show_lists">
+					<img src="static/image/note10.png" />
+				</div>
+			</div>
+			<!--热销单品-->
+			<div id="hotPro">
+				<h2 class="title">热销单品</h2>
+				<div class="layout">
+					<ul class="grid_ul">
+						<li class="grid-items" v-for="(item,index) in jsonData">
+							<a :href="`detail.html?id=${item.id}`">
+								<p class="grid-img">
+									<!--<img :src=`static/image/${item.img}` />-->
+									<img :src="'sas/upload/'+item.img" />
+								</p>
+								<p class="grid-title">{{item.name}}</p>
+								<p class="grid-desc">{{item.jianJie}}</p>
+								<p class="grid-price">¥{{item.price}}</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部广告-->
+			<div id="bottom_gg">
+				<img src="static/image/bottomgg2.jpg" />
+			</div>
+			<!--底部服务-->
+			<div class="slogan-container">
+				<div class="slogan">
+					<ul>
+						<li class="s1">
+							<i></i> 百强企业 品质保证
+						</li>
+						<li class="s2">
+							<i></i> 百强企业 品质保证
+						</li>
+						<li class="s3">
+							<i></i> 百强企业 品质保证
+						</li>
+						<li class="s4">
+							<i></i> 百强企业 品质保证
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部footer版权-->
+			<div id="footer">
+				<div class="foot">
+					<p class="foot_logo"><img src="static/image/flogo.png" /></p>
+					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
+					<p class=""></p>
+				</div>
+			</div>
+			<!--弹出-->
+			<el-dialog title="登录" :visible.sync="dialogFormVisible">
+			  <el-form :model="form">
+			    <el-form-item label="帐号" :label-width="formLabelWidth">
+			      <el-input v-model="form.userName" autocomplete="off"></el-input>
+			    </el-form-item>
+			    <el-form-item label="密码" :label-width="formLabelWidth">
+			      <el-input type="password" v-model="form.userPassword" autocomplete="off"></el-input>
+			    </el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button @click="registered">注册</el-button>
+			    <el-button type="primary" @click="login">登录</el-button>
+			  </div>
+			</el-dialog>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			// 初始化swiper
+			var mySwiper = new Swiper('.swiper-container', {
+				updateOnImagesReady: true,
+				direction: 'horizontal',
+				loop: true,
+				autoplay: 8000,
+				observer: true, //修改swiper自己或子元素时，自动初始化swiper
+				// 如果需要前进后退按钮
+				nextButton: '.swiper-button-next',
+				prevButton: '.swiper-button-prev',
+				pagination: '.swiper-pagination',
+			})
+		})
+	</script>
+	<!--vue-->
+	<script type="text/javascript">
+		// 注册
+		Vue.component('my-component', {});
+		var WEITUOSERVER = new Vue({
+			el: '#cdnvue',
+			data: {
+				jsonData: [],
+				dialogTableVisible: false,
+        		dialogFormVisible: false,
+        		form: {
+		          userName: '',
+		          userPassword: '',
+		          type: [],
+		        },
+		        formLabelWidth: '120px',
+		        userInfo: window.sessionStorage.user ? JSON.parse(window.sessionStorage.user ) : "",
+			},
+			created() {
+				this.gatData();
+			},
+			methods: {
+				gatData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"searchall":"searchall"},
+			             dataType: "json",
+						success: function(data) {
+							that.jsonData = data;
+						},
+					});
+				},
+				login() {
+					var that = this;
+					this.dialogFormVisible = false;
+//					debugger
+					if(this.form.userName && this.form.userPassword){
+						$.ajax({
+							type: "get",
+				             url: "php/index.php",
+				             data: {"userName":that.form.userName,"userPassword":that.form.userPassword},
+				             dataType: "json",
+							success: function(data) {
+								
+								if(data == null){
+									that.$message({
+							          message: '登录失败：账户或密码有误',
+							          type: 'error'
+							        });
+								}else{
+									window.sessionStorage.user = JSON.stringify(data);
+									that.userInfo = data;
+									that.$message({
+							          message: '登录成功',
+							          type: 'success'
+							        });
+								}
+							},
+							error:function(data){
+								console.log(data)
+							}
+						});
+					}else{
+						that.$message({
+				          message: '账户或密码不能为空',
+				          type: 'warning'
+				        });
+					}
+				},
+				registered() {
+					var that = this;
+					this.dialogFormVisible = false;
+					if(this.form.userName && this.form.userPassword){
+						$.ajax({
+							type: "get",
+				             url: "php/index.php",
+				             data: {"userName":that.form.userName,"userPassword":that.form.userPassword,"registered":"registered","uuid":that.uuid()},
+				             dataType: "json",
+							success: function(data) {
+								if(data == "注册成功"){
+									that.$message({
+							          message: '登录成功',
+							          type: 'success'
+							        });
+								}
+								window.reload()
+							},
+						});
+					}else{
+						that.$message({
+				          message: '账户或密码不能为空',
+				          type: 'warning'
+				        });
+					}
+				},
+				 //uuid
+				uuid () {
+					function _s4(){
+						  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+						}
+					return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+				  },
+				car() {
+					if(window.sessionStorage.user){
+						window.location.href = "car.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				}
+			}
+
+		})
+	</script>
+
+</html>

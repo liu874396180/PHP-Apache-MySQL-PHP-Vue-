@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>首页</title>
+		<link rel="stylesheet" href="css/page.css" />
+		<link rel="stylesheet" href="../static/css/public.css" />
+		<link rel="stylesheet" href="../static/css/elementui.css">
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		<script type="text/javascript" src="js/index.js" ></script>
+		<script type="text/javascript" src="../static/js/vue.js" ></script>
+		<script type="text/javascript" src="../static/js/elementui.js" ></script>
+		<style>
+			.el-input{
+				width: auto;
+				margin-bottom: 20px;
+			}
+			.el-textarea{
+				vertical-align: middle;
+				width: 90%;
+			}
+			.upload-demo{
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="sas_app">
+			<div class="left">
+				<div class="bigTitle">华为手机后台管理系统</div>
+				<div class="lines">
+					<div @click="flag = 2" :class="{active:flag == 2}"><img src="img/icon-2.png" />产品列表</div>
+					<div @click="flag = 1" :class="{active:flag == 1}"><img src="img/icon-1.png" />添加产品</div>
+					
+					<!-- <div onclick="pageClick(this)"><img src="img/icon-3.png" />个人信息管理</div>
+					<div onclick="pageClick(this)"><img src="img/icon-4.png" />收货地址管理</div>
+					<div onclick="pageClick(this)"><img src="img/icon-5.png" />在售门店管理</div> -->
+				</div>
+			</div>
+			<div class="top">
+				<div v-if="flag==1" class="leftTiyle" id="flTitle">添加产品</div>
+				<div v-else-if="flag==2" class="leftTiyle">产品列表</div>
+				<div class="thisUser">当前用户：超级管理员</div>
+			</div>
+			<div v-if="flag==1" class="content">
+					产品名称:<el-input v-model="p_name" placeholder="请输入产品名称"></el-input>
+					产品价格:<el-input v-model="p_price" placeholder="请输入产品价格"></el-input><br>
+					产品简介:<el-input type="textarea" :rows="2" placeholder="请输入简介" v-model="p_info"></el-input>
+					<el-upload
+					class="upload-demo"
+					action="upload.php"
+					:on-success="success_upload"
+					:limit="1"
+					:file-list="fileList">
+					<el-button size="small" type="primary">点击上传产品图片</el-button>
+					<!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+					</el-upload>
+					<el-button type="primary" style="width: 50%;margin-top: 50px;" @click="save">保存</el-button>
+			</div>
+			<div v-else-if="flag==2" class="content">
+					<el-table
+					height="450"
+					:data="jsonData"
+					style="width: 100%">
+					<el-table-column
+						label="主图"
+						width="180">
+						<template slot-scope="scope">
+							<img :src="'upload/'+scope.row.img" alt="">
+						</template>
+					</el-table-column>
+					<el-table-column
+						prop="name"
+						label="手机名称"
+						width="180">
+					</el-table-column>
+					<el-table-column
+						prop="price"
+						label="价格">
+					</el-table-column>
+					<el-table-column
+						prop="jianJie"
+						label="简介">
+					</el-table-column>
+					<el-table-column
+						label="操作"
+						width="180">
+						<template slot-scope="scope">
+							<a href="javascript:void(0)" @click="delet(scope.row.id)">删除</a>
+						</template>
+					</el-table-column>
+					</el-table>
+			</div>
+		</div>
+	</body>
+	<script>
+
+	</script>
+	<script type="text/javascript">
+		// 注册
+		Vue.component('my-component', {});
+		var WEITUOSERVER = new Vue({
+			el: '#sas_app',
+			data: {
+				jsonData: [],
+				dialogTableVisible: false,
+        		dialogFormVisible: false,
+        		p_name:"",
+				p_price:"",
+				p_info:"",
+				fileList:[],
+				flile_upload_name:"",
+				flag:2,
+			},
+			created() {
+				this.gatData();
+			},
+			methods: {
+				success_upload(response, file, fileList){
+					console.log(response)
+					console.log(file)
+					console.log(fileList)
+					this.flile_upload_name = file.name;
+				},
+				save(){
+					var that = this;
+					if(that.p_name&&that.p_price&&that.flile_upload_name&&that.p_info){
+						$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"pid":that.uuid(),"name":that.p_name,"price":that.p_price,"img":that.flile_upload_name,"jianJie":that.p_info,"add":"add"},
+			             dataType: "json",
+						success: function(data) {
+							that.$message({
+								message: "保存成功",
+								type: 'success'
+							});
+							setTimeout(()=>{window.location.reload();},200)
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.$message({
+								message: "保存成功",
+								type: 'success'
+							});
+							setTimeout(()=>{window.location.reload();},200)
+							
+							}
+						});
+					}else{
+						this.$message({
+				          message: '请输入完整的产品属性',
+				          type: 'warning'
+				        });
+					}
+					
+				},
+				 //uuid
+				 uuid () {
+					function _s4(){
+						  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+						}
+					return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+				  },
+				  gatData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"product":"all"},
+			             dataType: "json",
+						success: function(data) {
+							that.jsonData = data;
+						},
+					});
+				},
+				delet(id){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"pid":id,"dele":"deletea"},
+			             dataType: "json",
+						success: function(data) {
+							that.gatData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.gatData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+							
+						}
+					});
+				},
+			}
+		})
+	</script>
+</html>

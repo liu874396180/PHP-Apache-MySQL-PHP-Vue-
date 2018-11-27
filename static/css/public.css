@@ -1,0 +1,304 @@
+a{
+	cursor: pointer;
+	text-decoration: none;
+}
+ol, ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.top_gg{
+	width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+/*.top_gg a{
+	display: block;
+    position: relative;
+    width: 1920px;
+    text-align: center;
+    left: 50%;
+    background-color: ;
+    margin-left: -960px;
+}*/
+.top_gg img{
+	width: 100%;
+}
+/*登录购物车导航*/
+.shortcut{
+	min-width: 1200px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
+}
+.layout{
+	width: 1200px;
+    margin: 0 auto;
+    font-size: 12px;
+}
+/*清楚浮动.layout*/
+.layout:before, .layout:after{
+	content: "";
+    display: table;
+}
+.layout:after {
+    clear: both;
+}
+.layout .s-sub{
+	float: left;
+}
+.layout .s-right{
+	float: right;
+}
+.shortcut a{
+	color: #a4a4a4;
+}
+.shortcut a:hover {
+    color: #ca151d;
+}
+.shortcut li {
+    float: left;
+    padding: 0 8px;
+    position: relative;
+}
+/*header*/
+.header{
+	min-width: 1200px;
+    height: 50px;
+    padding: 10px 0;
+    background: #fff;
+    position: relative;
+    line-height: 1.5;
+}
+.header .left{
+	float: left;
+}
+.header .logo{
+	float: left;
+    margin-right: 40px;
+    width: 240px;
+    height: 50px;
+}
+.header .naver {
+    float: left;
+    max-width: 560px;
+    height: 40px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+.header .naver li{
+	float: left;
+    margin-right: 20px;
+}
+.naver a {
+    font-size: 16px;
+    color: #3a3a3a;
+    position: relative;
+    line-height: 40px;
+    display: block;
+}
+.naver a:hover{
+	color: #ca141d;
+}
+/*banner*/
+#banner{
+    height: 451px
+}
+
+/*静态展示列表*/
+.show_list{
+	display: flex;
+	width: 1200px;
+	margin: 0 auto;
+}
+.show_lists{
+	margin: 10px 6px 0;
+}
+/*热销单品*/
+.title{
+	color: #3a3a3a;
+    font-size: 22px;
+    margin: 0;
+    padding: 30px 0 15px 0;
+    line-height: 1;
+}
+#hotPro{
+	width: 1200px;
+	margin: 0 auto;
+}
+.grid-img{
+	margin: 36px auto 0;
+    width: 178px;
+    height: 178px;
+}
+.grid-img img{
+ 	width: 100%;
+    height: 100%;
+ }
+ .grid_ul{
+ 	margin-left: -12px
+ }
+.grid-items{
+	height: 346px;
+    width: 291px;
+    margin-top: 12px;
+    margin-left: 12px;
+    margin-bottom: 0;
+        float: left;
+     background: #fff;
+}
+.grid-items:hover{
+    box-shadow: 0px 0px 12px 5px #ccc;
+}
+.grid-items .grid-title{
+	height: 40px;
+    display: table-cell;
+    vertical-align: bottom;
+    width: 259px;
+    padding-left: 16px;
+    padding-top: 5px;
+    white-space: normal;
+    line-height: 1.1;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 16px 20px 2px;
+    overflow: hidden;
+    color: #3a3a3a;
+    text-align: center;
+}
+.grid-items .grid-desc{
+	font-size: 12px;
+    font-weight: 400;
+    margin: 4px 20px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #a4a4a4;
+    text-align: center;
+}
+
+.grid-items .grid-price{
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0 20px 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #cc0e11;
+    text-align: center;
+}
+
+/*底部广告*/
+#bottom_gg{
+	width: 1200px;
+	margin: 20px auto;
+}
+/*服务*/
+.slogan-container{
+    border-top: 1px solid #EEE;
+    line-height: 1.5
+}
+.slogan-container .slogan{
+    padding: 46px 0 46px;
+    width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.slogan-container .slogan li{
+    float: left;
+    line-height: 47px;
+    font-size: 18px;
+    color: #3a3a3a;
+    height: 47px;
+    width: 300px;
+    text-align: left;
+}
+/*此处可以写个多需要雪碧图的类--*/
+.slogan-container .slogan i{
+	background: url(../image/icon-common.png);
+    display: inline-block;
+    line-height: 47px;
+    width: 47px;
+    height: 47px;
+    margin-right: 16px;
+    vertical-align: middle;
+}
+/*这下面的位置属性需要在各个引入雪碧图的标签内单独写*/
+.slogan .s1 i{
+	background-position: 0 -151px;
+}
+.slogan .s2 i{
+    background-position: -94px -151px;
+}
+.slogan .s3 i{
+    background-position: -141px -151px;
+}
+.slogan .s4 i{
+	background-position: -47px -151px;
+}
+/*底部版权*/
+#footer{
+	border-top: 1px solid #EEE;
+    line-height: 1.5;
+    background: #e6e6e6;
+    width: 100%;
+    min-width: 1200px
+}
+#footer .foot{
+    padding: 26px 0 34px;
+    width: 1200px;
+    margin: 0 auto;
+    color: #666;
+    line-height: 1.5;
+}
+#footer .foot_logo{
+	width: 79px;
+    height: 16px;
+    padding: 20px 38px 0 0;
+    float: left;
+}
+
+
+
+/*详情页面*/
+.de-con-left{
+	float: left;
+	width: 500px;
+}
+.de-con-right{
+	float: left;
+	width: 700px;
+}
+.de-con-right-jianJie{
+	font-size: 21px;
+    max-height: 84px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.de-product-info{
+	background: #f5f5f5;
+    padding-top: 14px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+}
+
+
+
+/*购物车*/
+#car-table table{
+	width: 100%;
+}
+#car-table table td{
+	text-align: center;
+}
+.table-delete{
+	color: blue;
+	cursor: pointer;
+}
+.el-table td, .el-table th{
+    text-align: center !important;
+}
+.el-table__row img{ 
+    width: 39%;
+}
