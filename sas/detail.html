@@ -33,7 +33,7 @@
 				<div class="lines">
 					<div @click="flag = 2" :class="{active:flag == 2}"><img src="img/icon-2.png" />产品列表</div>
 					<div @click="flag = 1" :class="{active:flag == 1}"><img src="img/icon-1.png" />添加产品</div>
-					
+					<div @click="gatUserData" :class="{active:flag == 3}"><img src="img/icon-1.png" />用户管理</div>
 					<!-- <div onclick="pageClick(this)"><img src="img/icon-3.png" />个人信息管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-4.png" />收货地址管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-5.png" />在售门店管理</div> -->
@@ -45,9 +45,9 @@
 				<div class="thisUser">当前用户：超级管理员</div>
 			</div>
 			<div v-if="flag==1" class="content">
-					产品名称:<el-input v-model="p_name" placeholder="请输入产品名称"></el-input>
-					产品价格:<el-input v-model="p_price" placeholder="请输入产品价格"></el-input><br>
-					产品简介:<el-input type="textarea" :rows="2" placeholder="请输入简介" v-model="p_info"></el-input>
+					产品名称 :&emsp;<el-input v-model="p_name" placeholder="请输入产品名称"></el-input> &emsp;&emsp;
+					产品价格 :&emsp;<el-input v-model="p_price" placeholder="请输入产品价格"></el-input><br>
+					产品简介 :&emsp;<el-input type="textarea" :rows="2" placeholder="请输入简介" v-model="p_info"></el-input>
 					<el-upload
 					class="upload-demo"
 					action="upload.php"
@@ -93,6 +93,34 @@
 					</el-table-column>
 					</el-table>
 			</div>
+			<!--用户管理-->
+			<div v-if="flag==3" key="1" class="content">
+					<el-table
+					height="450"
+					:data="jsonUserData"
+					style="width: 100%">
+					<el-table-column
+						prop="userId"
+						label="用户id"
+						width="180">
+					</el-table-column>
+					<el-table-column
+						prop="userName"
+						label="账户">
+					</el-table-column>
+					<el-table-column
+						prop="password"
+						label="密码">
+					</el-table-column>
+					<el-table-column
+						label="操作"
+						width="180">
+						<template slot-scope="scope">
+							<a href="javascript:void(0)" @click="deletUser(scope.row.userId)">删除</a>
+						</template>
+					</el-table-column>
+					</el-table>
+			</div>
 		</div>
 	</body>
 	<script>
@@ -105,6 +133,7 @@
 			el: '#sas_app',
 			data: {
 				jsonData: [],
+				jsonUserData:[],
 				dialogTableVisible: false,
         		dialogFormVisible: false,
         		p_name:"",
@@ -176,6 +205,22 @@
 						},
 					});
 				},
+				gatUserData() {
+					var that = this;
+					this.flag = 3;
+					$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"users":"all"},
+			             dataType: "json",
+						success: function(data) {
+							that.jsonUserData = data;
+						},
+						error:function(data){
+							that.jsonUserData = data;
+						}
+					});
+				},
 				delet(id){
 					var that = this;
 					$.ajax({
@@ -193,6 +238,31 @@
 						error:function(data){
 							console.log(data.responseText)
 							that.gatData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+							
+						}
+					});
+				},
+				deletUser(userId){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"userId":userId,"deleteUser":"deleteUser"},
+			             dataType: "json",
+						success: function(data) {
+							that.gatUserData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.gatUserData();
 							that.$message({
 								message: "删除成功",
 								type: 'success'

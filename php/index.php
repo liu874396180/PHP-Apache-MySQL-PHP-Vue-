@@ -1,18 +1,5 @@
 <?php
-	// 设置返回json格式数据
-header('content-type:application/json;charset=utf8');
-$servername = "localhost";   //服务名称 本地
-$username = "root";          //用户名称root
-$password = "";				// 原始数据库密码是空
-$dbname = "test";
-// 创建连接
-$conn = new mysqli($servername, $username, $password,$dbname);
-mysqli_query($conn,'set names utf8');//解决数据库中有汉字时显示在前台出现乱码问题
-// 检测连接
-if ($conn->connect_error) {
-    die("连接失败: " . $conn->connect_error);
-} 
-//echo "连接成功";
+include '../config.php';
 
 //获取前端传值-----------------------------------------------------------------------------------
 //if( !empty($_GET['searchall']) ) $searchall = $_GET['searchall']; // 首页全部查询
@@ -50,9 +37,17 @@ function searchall ($conn){
 	    while($row = $result->fetch_assoc()) {
 	    	$array[] = $row;
 	    }
-	    echo json_encode($array);
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"查询成功",
+            "data"=>$array
+        ),JSON_UNESCAPED_UNICODE);
 	} else {
-	    echo "0 结果";
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"无数据",
+            "data"=>[]
+        ),JSON_UNESCAPED_UNICODE);
 	}
 }
 //登录
@@ -60,23 +55,44 @@ function login($conn){
 	$sql = "SELECT * FROM user WHERE userName='{$_GET['userName']}' AND password='{$_GET['userPassword']}'";
 	$result = $conn->query($sql);
 	$row = mysqli_fetch_assoc($result);
-//	if ($row < 1){
-//		echo "000";
-//	}else{
-//		echo json_encode($row);
-//	}
-echo json_encode($row);
+	if (!$row){
+		echo json_encode(array(
+            "resultCode"=>'0000',
+            "message"=>"帐号或密码有误",
+            "data"=>[]
+        ),JSON_UNESCAPED_UNICODE);
+	}else{
+		echo json_encode(array(
+            "resultCode"=>'200',
+            "message"=>"登录成功",
+            "data"=>$row
+        ),JSON_UNESCAPED_UNICODE);
+	}
 }
 //注册
 function registered($conn){
-//	if(){
-//		
-//	}
+
+	$sql = "SELECT * FROM user WHERE userName='{$_GET['userName']}'";
+	$query = $conn->query($sql); 
+	$row = mysqli_fetch_assoc($query);
+	//echo $query?1:0; //php 无法输出布尔值
+	 if($row){
+	 	echo json_encode(array(
+	        "resultCode"=>'0001',
+	        "message"=>"此用户已存在",
+	        "data"=>[]
+	    ),JSON_UNESCAPED_UNICODE);
+	 	return false;
+	}
 	$sql = "INSERT INTO user (userName, password,userId)
-	VALUES ('{$_GET['userName']}', '{$_GET['userPassword']}','{$_GET['uuid']}')";
-	   
+	VALUES ('{$_GET['userName']}', '{$_GET['userPassword']}','{$_GET['uuid']}')"; 
 	if ($conn->query($sql) === TRUE) {
-	    echo "注册成功";
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"注册成功！",
+            "data"=>[]
+        ),JSON_UNESCAPED_UNICODE);
+
 	} else {
 	    echo "Error: " . $sql . "<br>" . $conn->error;
 	}

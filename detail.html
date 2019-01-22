@@ -25,7 +25,7 @@
 					<div class="s-sub">
 						<ul>
 							<li>
-								<a href="">首页</a>
+								<a href="index.html">首页</a>
 							</li>
 							<li>
 								<a href="">华为官网</a>
@@ -57,7 +57,10 @@
 								<a href="javascript:void(0)" @click="dialogFormVisible = true">注册</a>
 							</li>-->
 							<li>
-								<a href="javascript:void(0)" @click="car">购物车</a>
+								<a href="javascript:void(0)" @click="order">|&emsp;订单</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" @click="car">|&emsp;购物车</a>
 							</li>
 						</ul>
 					</div>
@@ -113,13 +116,13 @@
 				</div>
 			</div>
 			<div id="" class="layout">
-				<p>首页>手机>华为>{{jsonData.jianJie}}</p>
+				<p><a href="index.html">首页</a>>手机>华为>{{jsonData.jianJie}}</p>
 				<div class="">
 					<div id="" class="de-con-left">
 						<img :src="'sas/upload/'+jsonData.img"/>
 					</div>
 					<div id="" class="de-con-right">
-						<p class="de-con-right-jianJie">{{jsonData.jianJie}}</p>
+						<p class="de-con-right-jianJie">{{jsonData.name}}&emsp;<span style="font-size: 18px;color: #999;">{{jsonData.jianJie}}</span></p>
 						<div class="de-product-info">
 							<p>价&ensp;&ensp;格：<span style="font-size: 24px;color: #ca141d;"><em>¥</em> {{jsonData.price}}</span></p>
 							<p>限时特价： <span>限时优惠300元</span></p>
@@ -144,16 +147,32 @@
 						<div class=""style="margin-top: 10px;">
 							<el-row>
 							  <el-button style="width: 25%;" @click="addCar">加入购物车</el-button>
-							  <el-button type="danger" style="width: 25%;" @click="xiadan">立即下单</el-button>
+							  <el-button type="danger" style="width: 25%;" @click="dialog_order = true">立即下单</el-button>
 							</el-row>
 						</div>
 					</div>
 				</div>
 			</div>
+			<!-- 地址弹窗 -->
+			<el-dialog
+				title="请先填写收货地址"
+				:visible.sync="dialog_order"
+				width="30%"
+				>
+				<el-form :model="form">
+					<el-form-item label="收货地址" :label-width="form.formLabelWidth">
+					  <el-input v-model="form.address" autocomplete="off"></el-input>
+					</el-form-item>
+				  </el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialog_order = false">取 消</el-button>
+					<el-button type="primary" @click="sure_order">确 定</el-button>
+				</span>
+			</el-dialog>
 			<!--底部footer版权-->
 			<div id="footer">
 				<div class="foot">
-					<p class="foot_logo"><img src="static/image/flogo.png" /></p>
+					<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
 					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
 					<p class=""></p>
 				</div>
@@ -167,6 +186,8 @@
 			el: '#pdetail',
 			data: {
 				jsonData: {},
+				dialog_order:false, //下单弹窗
+				form:{address:"河南省郑州市二七区",formLabelWidth:"120px"},
 				dialogTableVisible: false,
         		dialogFormVisible: false,
         		pid:"",
@@ -184,10 +205,10 @@
 					$.ajax({
 						type: "GET",
 			             url: "php/detail.php",
-			             data: {"pid":that.pid},
+			             data: {"pid":that.pid,"getdata":"pro_detail"},
 			             dataType: "json",
-						success: function(data) {
-							that.jsonData = data[0];
+						success: function(res) {
+							that.jsonData = res.data[0];
 						},
 					});
 				},
@@ -196,11 +217,10 @@
 				     var r = window.location.search.substr(1).match(reg);
 				     if(r!=null)return  unescape(r[2]); return null;
 				},
-				xiadan() {
-					 this.$message({
-				          message: '恭喜你，下单成功',
-				          type: 'success'
-				       });
+				// 确定下单
+				sure_order(){
+					this.dialog_order = false;
+					this.order();
 				},
 				addCar() {
 					var that = this;
@@ -212,25 +232,24 @@
 				             url: "php/detail.php",
 				             data: {"pid":that.pid,"userId":user.userId,"name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie},
 				             dataType: "json",
-							success: function(data) {
-//								that.$message({
-//							          message: '恭喜你，添加成功',
-//							          type: 'success'
-//							       });
-							},
-							error:function(data){
-								console.log(data.responseText)
-								if(data.responseText.indexOf("添加成功") !== -1){
+							success: function(res) {
+								if(res.resultCode == 200){
 									that.$message({
-							          message: '添加成功',
+							          message: '恭喜你，添加成功',
 							          type: 'success'
-							        });
-								}else{
+							       });
+								}else if(res.resultCode == "00"){
 									that.$message({
 							          message: '请不要重复添加',
 							          type: 'warning'
 							       });
 								}
+							},
+							error:function(data){
+								that.$message({
+						          message: '添加失败',
+						          type: 'success'
+						        });
 							}
 						});
 					}else{
@@ -243,6 +262,43 @@
 				car(){
 					if(window.sessionStorage.user){
 						window.location.href = "car.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				},
+				order(){
+					var that = this;
+					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+					if(!!user){
+						var that = this;
+						$.ajax({
+							type: "GET",
+				             url: "php/detail.php",
+				             data: {"pid":that.pid,"userId":user.userId,"p_name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"my_address":that.form.address},
+				             dataType: "json",
+							success: function(res) {
+								if(res.resultCode == 200){
+									that.$message({
+							          message: '恭喜你，下单成功',
+							          type: 'success'
+							       });
+								}else if(res.resultCode == "00"){
+									that.$message({
+							          message: '请不要重复下单',
+							          type: 'warning'
+							       });
+								}
+							},
+							error:function(data){
+								that.$message({
+						          message: '下单失败',
+						          type: 'success'
+						        });
+							}
+						});
 					}else{
 						this.$message({
 				          message: '请先登录',

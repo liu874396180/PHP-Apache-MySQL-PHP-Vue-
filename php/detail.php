@@ -1,18 +1,5 @@
 <?php
-	// 设置返回json格式数据
-header('content-type:application/json;charset=utf8');
-$servername = "localhost";   //服务名称 本地
-$username = "root";          //用户名称root
-$password = "";				// 原始数据库密码是空
-$dbname = "test";
-// 创建连接
-$conn = new mysqli($servername, $username, $password,$dbname);
-mysqli_query($conn,'set names utf8');//解决数据库中有汉字时显示在前台出现乱码问题
-// 检测连接
-if ($conn->connect_error) {
-    die("连接失败: " . $conn->connect_error);
-} 
-//echo "连接成功";
+include '../config.php';
 
 //获取前端传值-----------------------------------------------------------------------------------
 //if( !empty($_GET['searchall']) ) $searchall = $_GET['searchall']; // 首页全部查询
@@ -20,10 +7,17 @@ if( !empty($_GET['pid']) ) $userName = $_GET['pid'];
 
 
 //逻辑调用-----------------------------------------------------------------------------------
-products ($conn);
+if(  !empty($_GET['getdata']) && $_GET['getdata'] == 'pro_detail' ) {
+	products ($conn);
+};
 
-if( !empty($_GET['pid']) && !empty($_GET['userId']) ) {
+
+if( !empty($_GET['pid']) && !empty($_GET['userId']) && empty($_GET['my_address']) ) {
 	addCar($conn);
+};
+
+if( !empty($_GET['pid']) && !empty($_GET['userId']) && !empty($_GET['my_address']) ) {
+	addOrder($conn);
 };
 //逻辑编写函数-----------------------------------------------------------------------------------
 
@@ -38,7 +32,11 @@ function products ($conn){
 	    while($row = $result->fetch_assoc()) {
 	    	$array[] = $row;
 	    }
-	    echo json_encode($array);
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"查询成功",
+            "data"=>$array
+        ),JSON_UNESCAPED_UNICODE);
 	} else {
 	    echo "0 结果";
 	}
@@ -64,31 +62,61 @@ function addCar($conn){
 	// }else{
 	// 	echo "购物车已存在";
 	// }
-
-
-
-	// $sql = "SELECT * FROM car WHERE id='{$_GET['pid']}'";
-	// $result = $conn->query($sql);
-	// $row = mysqli_fetch_assoc($result);
+	 $sql = "SELECT * FROM car WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+	 $result = $conn->query($sql);
+	 $row = mysqli_fetch_assoc($result);
+	 if($row == TRUE){
 	// if($conn->query($sql) == TRUE){
-	// 	echo "重复添加";
+	 	echo json_encode(array(
+         "resultCode"=>"00",
+         "message"=>"重复添加",
+         "data"=>[]
+     ),JSON_UNESCAPED_UNICODE);
 
-	// 	return false;
-	// }else{
-	// 	echo "添加成功";
+	 	return false;
+	 }else{
 		$sql = "INSERT INTO car (userId, id,name,price,jianJie,img)
 		VALUES ('{$_GET['userId']}', '{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}')";
 		   
 		if ($conn->query($sql) === TRUE) {
-		    echo "添加成功";
+		    echo json_encode(array(
+	            "resultCode"=>200,
+	            "message"=>"添加成功",
+	            "data"=>[]
+	        ),JSON_UNESCAPED_UNICODE);
 		} else {
 		    echo "Error: " . $sql . "<br>" . $conn->error;
 		}
-	// }
-	
-	
+	 }
 }
 
+//添加订单
+function addOrder($conn){
+	$sql = "SELECT * FROM my_order WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+	$result = $conn->query($sql);
+	$row = mysqli_fetch_assoc($result);
+	if($row == TRUE){
+		echo json_encode(array(
+			"resultCode"=>"00",
+			"message"=>"重复下单",
+			"data"=>[]
+		),JSON_UNESCAPED_UNICODE);
+		return false;
+	}else{
+		$sql = "INSERT INTO my_order (userId,id,p_name,price,jianJie,my_address,img)
+		VALUES ('{$_GET['userId']}','{$_GET['pid']}','{$_GET['p_name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['my_address']}','{$_GET['img']}')";
+			
+		if ($conn->query($sql) === TRUE) {
+			echo json_encode(array(
+				"resultCode"=>200,
+				"message"=>"添加成功",
+				"data"=>[]
+			),JSON_UNESCAPED_UNICODE);
+		} else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+		}
+	}
+}
  
 $conn->close();
 ?>

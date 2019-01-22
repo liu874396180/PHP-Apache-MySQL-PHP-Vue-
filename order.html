@@ -57,10 +57,10 @@
 								<a href="javascript:void(0)" @click="dialogFormVisible = true">注册</a>
 							</li>-->
 							<li>
-								<a href="javascript:void(0)" @click="order">|&emsp;订单</a>
+								<a href="javascript:void(0)">|&emsp;订单</a>
 							</li>
 							<li>
-								<a href="javascript:void(0)">购物车</a>
+								<a href="javascript:void(0)"  @click="car">购物车</a>
 							</li>
 						</ul>
 					</div>
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 			<div id="car-table" class="layout">
-				<p><a href="index.html">首页</a>>手机>华为>购物车</p>
+				<p>首页>手机>华为>订单</p>
 				<!-- <table border cellspacing="0" v-if="jsonData.length">
 					<tr>
 						<th>主图</th>
@@ -145,7 +145,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column
-						prop="name"
+						prop="p_name"
 						label="手机名称"
 						width="180">
 					</el-table-column>
@@ -156,6 +156,10 @@
 					<el-table-column
 						prop="jianJie"
 						label="简介">
+					</el-table-column>
+					<el-table-column
+						prop="my_address"
+						label="收货地址">
 					</el-table-column>
 					<el-table-column
 						label="操作"
@@ -198,7 +202,7 @@
 					var that = this;
 					$.ajax({
 						type: "GET",
-			             url: "php/car.php",
+			             url: "php/order.php",
 			             data: {"userId":JSON.parse(window.sessionStorage.user).userId},
 			             dataType: "json",
 						success: function(data) {
@@ -210,7 +214,7 @@
 					var that = this;
 					$.ajax({
 						type: "GET",
-			             url: "php/car.php",
+			             url: "php/order.php",
 			             data: {"pid":id,"del":"del"},
 			             dataType: "json",
 						success: function(data) {
@@ -221,9 +225,10 @@
 							that.gatData();
 						},
 						error:function(data){
+							console.log(data.responseText)
 							that.$message({
 								message: data.responseText,
-								type: 'warning'
+								type: 'success'
 							});
 							window.location.reload();
 						}
@@ -246,16 +251,16 @@
 				        });
 					}
 				},
-				order(){
+				car(){
 					if(window.sessionStorage.user){
-						window.location.href = "order.html"
+						window.location.href = "car.html"
 					}else{
 						this.$message({
 				          message: '请先登录',
 				          type: 'warning'
 				        });
 					}
-				}
+				},
 			}
 		})
 	</script>

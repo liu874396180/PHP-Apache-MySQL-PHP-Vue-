@@ -79,8 +79,12 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 		<button id="login" class="btn btn-primary btn-block btn-large">登录</button>
 	</form> -->
 	<!-- <form method="post"> -->
-		<input type="text" name="u" placeholder="用户名" required="required" />
-		<input type="password" name="p" placeholder="密码" required="required" />
+		
+		<!--<label style="display:none;"><span></span><input type="text" name="u" ></label>
+		<label style="display:none;"><span></span><input type="password" name="hidden2" ></label>-->
+
+		<input type="text" name="u" value="" autocomplete="off" id="unanm" placeholder="用户名" required="required" />
+		<input type="password" name="p" value="" autocomplete="off" id="pas" placeholder="密码" required="required" />
 		<button id="login" class="btn btn-primary btn-block btn-large">登录</button>
 	<!-- </form> -->
 </div>
@@ -89,10 +93,15 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 <script>
 	window.onload = function(){
 		var login = document.getElementById("login");
+		var unanm = document.getElementById("unanm");
+		var pas = document.getElementById("pas");
 		login.onclick = function(){
-			
-			window.location.href = 'detail.html';
-
+			if((unanm.value=="hcw"||unanm.value=="HCW")&&pas.value==123456){
+				window.location.href = 'detail.html';
+			}else{
+				alert("账户或密码有误")
+			}
+		
 	}
 }
 </script>

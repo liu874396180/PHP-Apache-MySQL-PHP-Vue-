@@ -19,7 +19,7 @@ if(!empty($_GET['userId']) && empty($_GET['del']) ) {
 
 //查询所有
 function products_car ($conn){
-	$sql = "SELECT * FROM car WHERE userId='{$_GET['userId']}'";
+	$sql = "SELECT * FROM my_order WHERE userId='{$_GET['userId']}'";
 	$result = $conn->query($sql);
 	$array = array();
 	if ($result->num_rows > 0) {
@@ -44,7 +44,7 @@ function products_car ($conn){
 //删除
 function deleteP ($conn){
     // mysqli_query($conn,"DELETE FROM car WHERE id='{$_GET['pid']}'");
-    $sql = "DELETE FROM car WHERE id='{$_GET['pid']}'";
+    $sql = "DELETE FROM my_order WHERE id='{$_GET['pid']}'";
     $result = $conn->query($sql);
     echo json_encode(array(
 		"resultCode"=>200,
