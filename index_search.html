@@ -1,0 +1,305 @@
+<html>
+
+	<head>
+		<title>华为商城</title>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/public.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="static/css/elementui.css"/>
+		<link rel="shortcut icon" href="favicon.ico">
+		<script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/vue.js"></script>
+		<script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body style="min-width: 1200px; overflow-x: auto;background: #f5f5f5;">
+		<div id="cdnvue">
+			<div id="" class="top_gg">
+				<a href="">
+					<!-- <img src="static/image/top_gg.jpg" /> -->
+				</a>
+			</div>
+			<div id="" class="shortcut">
+					<div class="layout">
+						<div class="s-sub">
+							<ul>
+								<li>
+									<a href="index.html">首页</a>
+								</li>
+								<li>
+										<a href="systemInfo.html">商城简介</a>
+									</li>
+									<!-- <li>
+										<a href="">帮助中心 用户反馈</a>
+									</li> -->
+									<li>
+										<a href="baoxiu.html">保修政策</a>
+									</li>
+									<li>
+										<a href="problem.html">热门问题</a>
+									</li>
+							</ul>
+						</div>
+						<div class="s-right">
+							<ul>
+								<li>
+									<a href="index.html" v-if="!userInfo">未登录</a>
+									<a href="userInfo.html" v-else>{{userInfo.userName}}</a>
+								</li>
+								<!-- <li v-if="userInfo">
+									<a href="javascript:void(0)">积分：{{userInfo.jifen}}</a>
+								</li> -->
+								<!--<li>
+									<a href="javascript:void(0)" @click="dialogFormVisible = true">注册</a>
+								</li>-->
+								<li>
+									<a href="javascript:void(0)" @click="isOrder">|&emsp;订单</a>
+								</li>
+								<li>
+									<a href="javascript:void(0)" @click="car">|&emsp;购物车</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			<!--header-->
+			<div class="header">
+				<div id="" class="layout">
+					<div class="left">
+						<div class="logo">
+							<img src="static/image/logo.png" />
+						</div>
+						<div class="naver">
+							<ul id="naver-list">
+								<li id="huawei" class="">
+									<a href="ry.html" target="_blank">
+										<span>荣耀</span>
+									</a>
+								</li>
+								<li id="huawei" class="">
+										<a href="p.html" target="_blank">
+											<span>HUAWEI P系列</span>
+										</a>
+									</li>
+								<li id="honor" class="">
+									<a href="rycw.html" target="_blank">
+										<span>荣耀畅玩系列</span>
+									</a>
+								</li>
+								<li id="honor" class="">
+									<a href="mate.html" target="_blank">
+										<span>HUAWEI Mate系列</span>
+									</a>
+								</li>
+								<li id="honor" class="">
+										<a href="nova.html" target="_blank">
+											<span>HUAWEI nova系列</span>
+										</a>
+									</li>
+								<!-- <li id="huawei" class="">
+									<a href="nova_4.html" target="_blank">
+										<span>华为畅享系列</span>
+									</a>
+								</li> -->
+							</ul>
+						</div>
+					</div>
+					<!--导航右边部分-->
+					<div class="right">
+						<input type="text" v-model="searchVal" placeholder="荣耀10降价" class="search-text">
+						<el-button class="search-btn" icon="el-icon-search" @click="onsearchVal" circle></el-button>
+					</div>
+				</div>
+			</div>
+			<!--热销单品-->
+			<div id="hotPro" class="layout">
+				<div class="layout" style="background: #fff;">
+					<p style="float: left;line-height: 5;margin: 0;color:#666"><a href="index.html" style="color:#666">&emsp;首页</a> >>搜索结果</p>
+						<!-- <div class="orderBy" style="font-size: 12px;">
+								<span @click="orderBy('price')">价格从低到高</span>&emsp;|&emsp;<span @click="orderBy('sales')">销量从低到高</span>&emsp;|
+								<span @click="orderBy2('price')">价格从高到低</span>&emsp;|&emsp;<span @click="orderBy2('sales')">销量从高到低</span>
+						</div> -->
+				</div>
+				<div class="layout" style="min-height: 300px;">
+					<ul class="grid_ul">
+						<li class="grid-items" v-for="(item,index) in jsonData">
+							<a :href="`detail.html?id=${item.id}`">
+								<p class="grid-img">
+									<!--<img :src=`static/image/${item.img}` />-->
+									<img :src="'sas/upload/'+item.img" />
+								</p>
+								<p class="grid-title">{{item.name}}</p>
+								<!-- <p class="grid-desc">{{item.jianJie}}</p> -->
+								<p class="grid-price">¥{{item.price}}</p>
+								<p class="grid-sales">销量：{{item.sales}}</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部广告-->
+			<div id="bottom_gg">
+				<!-- <img src="static/image/bottomgg2.jpg" /> -->
+			</div>
+			<!--底部服务-->
+			<div class="slogan-container">
+				<div class="slogan">
+					<ul>
+						<li class="s1">
+							<i></i> 百强企业 品质保证
+						</li>
+						<li class="s2">
+							<i></i> 7天退货 15天换货
+						</li>
+						<li class="s3">
+							<i></i> 48元起免运费
+						</li>
+						<li class="s4">
+							<i></i> 1000家维修网点 全国联保
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部footer版权-->
+			<div id="footer">
+				<div class="foot">
+					<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
+					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
+					<p class=""></p>
+				</div>
+			</div>
+		</div>
+	</body>
+	<!--vue-->
+	<script type="text/javascript">
+		// 注册
+		Vue.component('my-component', {});
+		var WEITUOSERVER = new Vue({
+			el: '#cdnvue',
+			data: {
+				jsonData: [],  //主页产品
+				searchVal:"", // 搜索
+				userInfo: window.sessionStorage.user ? JSON.parse(window.sessionStorage.user ) : "",
+			},
+			created() {
+				// this.gatData();
+				this.searchVal = this.GetQueryString("arg");
+				this.onsearchVal();
+			},
+			methods: {
+				handleClick(tab, event) {
+			        console.log(tab, event);
+			      },
+				gatData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"searchall":"searchall"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// 搜索
+				onsearchVal(){
+					var that = this;
+					that.searchVal = decodeURI(that.searchVal);
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"searchVal":that.searchVal,"searchName":"searchName"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// 排序--升序
+				orderBy(arg){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"orderBy":arg,"paixu":"paixu"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// 排序--降序
+				orderBy2(arg){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"orderBy":arg,"paixu":"paixu","jiangxu":"jiangxu"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// 公告跳转
+				toggDetail(arg){
+					var arg = encodeURI(encodeURI(arg));
+					window.location.href = "gonggao.html?t="+arg;
+
+				},
+
+				// 获取公告
+				gatggData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "sas/gg.php",
+			             data: {"ggallList":"allList"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonggData = res;
+						},
+					});
+				},
+			
+				 //uuid
+				uuid () {
+					function _s4(){
+						  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+						}
+					return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+				  },
+				GetQueryString(name){
+							var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+							var r = window.location.search.substr(1).match(reg);
+							if(r!=null)return  unescape(r[2]); return null;
+				},
+				car(){
+					if(window.sessionStorage.user){
+						window.location.href = "car.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				},
+				isOrder(){
+					if(window.sessionStorage.user){
+						window.location.href = "order.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				},
+			}
+
+		})
+	</script>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="static/css/elementui.css" />
+    <link rel="shortcut icon" href="favicon.ico">
+    <script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue.js"></script>
+    <script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+    <title>热门问题</title>
+</head>
+
+<body id="login-body">
+    <div class="login-header">
+        <div class="login-body">
+            <div class="login-cont">
+                <a href="index.html"><img src="static/image/head-top.png" alt=""></a>
+            </div>
+            <div class="login-name">
+                <b style="font-size: 18px;margin-top: -5px;float: left;color:#cccccc;">|</b>
+                <b style="font-size: 18px;margin-top: -3px;float: left; margin-left:18px;">华为商城</b>
+            </div>
+        </div>
+    </div>
+    <div class="login-main">
+        <span style="    margin: 10px 0;display: inline-block;color:#666"><a href="index.html" style="color:#666">首页</a> > 购物类热门问题</span>
+        <div class="faq-list" id="faqList">
+            <div id="f1" class="faq-area">
+                <div class="h">
+                    <h3>※ 如何在华为商城购买商品？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，华为商城的购物流程与主流的网上商城的购物流程是类似的。您首先需要注册，成为华为商城的会员，然后选择自己喜欢的商品，再将需要购买的商品加入购物车，提交订单并成功支付后，商城会及时安排给您发货。
+                    </p>
+                </div>
+            </div>
+            <div id="f2" class="faq-area">
+                <div class="h">
+                    <h3>※ 在华为商城购买的商品是否是正品？能否享受三包服务？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，华为商城所售商品均为正品行货且有正规发票，您可凭发票与保修卡在华为授权的售后服务中心享受全国联保服务，同时，华为商城还针对所售商品提供7天退货、15天换货的优质售后服务。 </p>
+                </div>
+            </div>
+            <div id="f3" class="faq-area current">
+                <div class="h">
+                    <h3>※ 华为商城支持的支付方式有哪几种？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，商城目前支持在线支付方式有：网上银行（包括开通了网银功能的储蓄卡和信用卡）、第三方支付（支付宝、微信）、信用卡快捷支付及花呗分期，请在支付方式处选择适合您的支付方式。 </p>
+                </div>
+            </div>
+            <div id="f4" class="faq-area">
+                <div class="h">
+                    <h3>※ 订单支付成功后，华为商城何时开始发货？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，在商品现货的情况下，普通订单会在您支付成功后的1-2天内为您发货，发货后的具体到货时间以物流实际配送为准；特殊情况（如：活动抢购、降价等），期间由于订单数量较多，预计支付成功后7天内为您发货，您可提供订单号到人工客服查询，若有特殊情况，我们也会在页面说明。
+                    </p>
+                </div>
+            </div>
+            <div id="f5" class="faq-area">
+                <div class="h">
+                    <h3>※ 华为商城使用的是什么快递？发货后多久能到？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，华为商城采用顺丰、EMS的优质快递服务，可实现全国覆盖，为您提供更优质、更快速的物流配送服务。顺丰速运配送广东省内地区一般1-2天可以送达，广东省外（新疆、西藏、内蒙等偏远地区除外）一般3-7天可以送达。邮政快递EMS配送，一般3-7天左右可以送达。您可以用您的运单号到对应的物流公司官方网站查询物流信息。
+                    </p>
+                </div>
+            </div>
+            <div id="f6" class="faq-area">
+                <div class="h">
+                    <h3>※ 订单取消后还能恢复吗？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，订单取消之后不能恢复，请您谨慎操作。 </p>
+                </div>
+            </div>
+            <div id="f7" class="faq-area">
+                <div class="h">
+                    <h3>※ 申请退货的产品退款什么时候返还？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，您点击取消订单后，系统会自动帮您申请退款单，商城会在3-5个工作日把款项退出，具体到账时间取决于第三方支付平台或银行的处理速度，支付宝方式一般1-3个工作日左右可到账，财付通和信用卡快捷支付一般3-5个工作日左右可到账，网银支付一般为3-7个工作日左右可到账，客户个人账户异常情况除外。
+                    </p>
+                </div>
+            </div>
+            <div id="f8" class="faq-area">
+                <div class="h">
+                    <h3>※ 为什么我的订单总是无法提交成功？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，订单无法提交成功可能有以下几种情况：1、订单商品库存不足；2、订单信息填写不完整；3、网络延时导致，此时建议您退出之后再重新登录尝试操作。 </p>
+                </div>
+            </div>
+            <div id="f9" class="faq-area">
+                <div class="h">
+                    <h3>※ 是否支持货到付款？</h3>
+                </div>
+                <div class="b">
+                    <p>您好，华为商城暂不支持货到付款服务，建议您选择其他在线支付方式进行支付。 </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

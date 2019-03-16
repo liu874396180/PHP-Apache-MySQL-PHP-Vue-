@@ -19,9 +19,17 @@
 			.el-textarea{
 				vertical-align: middle;
 				width: 90%;
+				margin-bottom: 17px;
 			}
 			.upload-demo{
 				margin-top: 20px;
+			}
+			/* gg列表 */
+			.el-table .cell{
+				text-overflow: ellipsis;
+				height: 26px;
+				white-space: nowrap;
+				overflow: hidden;
 			}
 		</style>
 	</head>
@@ -32,8 +40,10 @@
 				<div class="bigTitle">华为手机后台管理系统</div>
 				<div class="lines">
 					<div @click="flag = 2" :class="{active:flag == 2}"><img src="img/icon-2.png" />产品列表</div>
-					<div @click="flag = 1" :class="{active:flag == 1}"><img src="img/icon-1.png" />添加产品</div>
+					<div @click="flag = 1" :class="{active:flag == 1}"><img src="img/addpr.png" />添加产品</div>
 					<div @click="gatUserData" :class="{active:flag == 3}"><img src="img/icon-1.png" />用户管理</div>
+					<div @click="gatggData" :class="{active:flag == 4}"><img src="img/gonggao.png" />公告管理</div>
+					<div @click="flag = 5" :class="{active:flag == 5}"><img src="img/addpr.png" />新增公告</div>
 					<!-- <div onclick="pageClick(this)"><img src="img/icon-3.png" />个人信息管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-4.png" />收货地址管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-5.png" />在售门店管理</div> -->
@@ -41,13 +51,24 @@
 			</div>
 			<div class="top">
 				<div v-if="flag==1" class="leftTiyle" id="flTitle">添加产品</div>
-				<div v-else-if="flag==2" class="leftTiyle">产品列表</div>
+				<div v-if="flag==2" class="leftTiyle">产品列表</div>
+				<div v-if="flag==3" class="leftTiyle">用户管理</div>
+				<div v-if="flag==4" class="leftTiyle">公告管理</div>
+				<div v-if="flag==5" class="leftTiyle">新增公共</div>
 				<div class="thisUser">当前用户：超级管理员</div>
 			</div>
 			<div v-if="flag==1" class="content">
 					产品名称 :&emsp;<el-input v-model="p_name" placeholder="请输入产品名称"></el-input> &emsp;&emsp;
 					产品价格 :&emsp;<el-input v-model="p_price" placeholder="请输入产品价格"></el-input><br>
 					产品简介 :&emsp;<el-input type="textarea" :rows="2" placeholder="请输入简介" v-model="p_info"></el-input>
+					产品型号 :&emsp;<el-select v-model="p_class" placeholder="请选择">
+						<el-option label="荣耀" value="10"></el-option>
+						<el-option label="HUAWEI P系列" value="20"></el-option>
+						<el-option label="荣耀畅玩系列" value="30"></el-option>
+						<el-option label="HUAWEI Mate系列" value="40"></el-option>
+						<el-option label="HUAWEI nova系列" value="50"></el-option>
+						<!-- <el-option label="华为畅享系列" value="60"></el-option> -->
+					</el-select>
 					<el-upload
 					class="upload-demo"
 					action="upload.php"
@@ -88,7 +109,7 @@
 						label="操作"
 						width="180">
 						<template slot-scope="scope">
-							<a href="javascript:void(0)" @click="delet(scope.row.id)">删除</a>
+							<a href="javascript:void(0)" style="color:#1989fa" @click="delet_p(scope.row.id)">删除</a>
 						</template>
 					</el-table-column>
 					</el-table>
@@ -116,10 +137,39 @@
 						label="操作"
 						width="180">
 						<template slot-scope="scope">
-							<a href="javascript:void(0)" @click="deletUser(scope.row.userId)">删除</a>
+							<a href="javascript:void(0)" style="color:#1989fa" @click="deletUser(scope.row.userId)">删除</a>
 						</template>
 					</el-table-column>
 					</el-table>
+			</div>
+			<!-- 公告管理 -->
+			<div v-if="flag==4" key="2" class="content">
+					<el-table
+					height="450"
+					:data="jsonggData"
+					style="width: 100%">
+					<el-table-column
+						prop="g_title"
+						label="公告名称">
+					</el-table-column>
+					<el-table-column
+						prop="g_detail"
+						label="公告详情">
+					</el-table-column>
+					<el-table-column
+						label="操作"
+						width="180">
+						<template slot-scope="scope">
+							<a href="javascript:void(0)" @click="deletgg(scope.row.g_title)">删除</a>
+						</template>
+					</el-table-column>
+					</el-table>
+			</div>
+			<!-- 新增公告 -->
+			<div v-if="flag==5" class="content">
+					公告名称 :&emsp;<el-input v-model="g_title" placeholder="公告名称"></el-input> <br>
+					公告简介 :&emsp;<el-input type="textarea" :rows="2" placeholder="公告详情" v-model="g_detail"></el-input>
+					<el-button type="primary" style="width: 50%;margin-top: 50px;" @click="save_gg">保存</el-button>
 			</div>
 		</div>
 	</body>
@@ -134,14 +184,18 @@
 			data: {
 				jsonData: [],
 				jsonUserData:[],
+				jsonggData:[], // 公告列表
 				dialogTableVisible: false,
         		dialogFormVisible: false,
         		p_name:"",
 				p_price:"",
 				p_info:"",
+				p_class:"", // 型号
 				fileList:[],
 				flile_upload_name:"",
 				flag:2,
+				g_title:"",  // 公告名称
+				g_detail:""   // 公告详情
 			},
 			created() {
 				this.gatData();
@@ -153,13 +207,14 @@
 					console.log(fileList)
 					this.flile_upload_name = file.name;
 				},
+				// 存储主页产品
 				save(){
 					var that = this;
-					if(that.p_name&&that.p_price&&that.flile_upload_name&&that.p_info){
+					if(that.p_name&&that.p_price&&that.flile_upload_name&&that.p_info&&that.p_class){
 						$.ajax({
 						type: "GET",
 			             url: "product.php",
-			             data: {"pid":that.uuid(),"name":that.p_name,"price":that.p_price,"img":that.flile_upload_name,"jianJie":that.p_info,"add":"add"},
+			             data: {"pid":that.uuid(),"name":that.p_name,"price":that.p_price,"img":that.flile_upload_name,"jianJie":that.p_info,"p_class":that.p_class,"add":"add"},
 			             dataType: "json",
 						success: function(data) {
 							that.$message({
@@ -187,13 +242,13 @@
 					
 				},
 				 //uuid
-				 uuid () {
+				uuid () {
 					function _s4(){
 						  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 						}
 					return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
 				  },
-				  gatData() {
+				gatData() {
 					var that = this;
 					$.ajax({
 						type: "GET",
@@ -205,6 +260,7 @@
 						},
 					});
 				},
+				// 获取用户列表
 				gatUserData() {
 					var that = this;
 					this.flag = 3;
@@ -221,7 +277,59 @@
 						}
 					});
 				},
-				delet(id){
+				// 新增公告
+				save_gg(){
+					var that = this;
+					if(that.g_title&&that.g_detail){
+						$.ajax({
+						type: "GET",
+			             url: "gg.php",
+			             data: {"g_title":that.g_title,"g_detail":that.g_detail,"add":"add"},
+			             dataType: "json",
+						success: function(data) {
+							that.$message({
+								message: "保存成功",
+								type: 'success'
+							});
+							setTimeout(()=>{window.location.reload();},200)
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.$message({
+								message: "保存成功",
+								type: 'success'
+							});
+							setTimeout(()=>{window.location.reload();},200)
+							
+							}
+						});
+					}else{
+						this.$message({
+				          message: '请输入完整',
+				          type: 'warning'
+				        });
+					}
+					
+				},
+				// 获取公告列表
+				gatggData(){
+					var that = this;
+					this.flag = 4;
+					$.ajax({
+						type: "GET",
+			             url: "gg.php",
+			             data: {"ggallList":"allList"},
+			             dataType: "json",
+						success: function(data) {
+							that.jsonggData = data;
+						},
+						error:function(data){
+							// that.jsonUserData = data;
+						}
+					});
+				},
+				// 删除产品
+				delet_p(id){
 					var that = this;
 					$.ajax({
 						type: "GET",
@@ -246,6 +354,7 @@
 						}
 					});
 				},
+				// 删除用户
 				deletUser(userId){
 					var that = this;
 					$.ajax({
@@ -268,6 +377,25 @@
 								type: 'success'
 							});
 							
+						}
+					});
+				},
+				// 删除公告
+				deletgg(g_title){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "gg.php",
+			             data: {"g_title":g_title,"g_detele":"g_detele"},
+			             dataType: "json",
+						success: function(data) {
+							that.gatggData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+						},
+						error:function(data){
 						}
 					});
 				},

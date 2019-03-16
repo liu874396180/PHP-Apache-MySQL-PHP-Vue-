@@ -30,7 +30,7 @@ ol, ul {
 	min-width: 1200px;
     height: 30px;
     line-height: 30px;
-    background-color: #fff;
+    background: #f0f0f0;
     font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
 }
 .layout{
@@ -63,6 +63,15 @@ ol, ul {
     padding: 0 8px;
     position: relative;
 }
+.toTop{
+    height: 20px;
+    width: 20px;
+    position: fixed;
+    right: 12px;
+    bottom: 10%;
+    font-size: 30px;
+    color: #666;
+}
 /*header*/
 .header{
 	min-width: 1200px;
@@ -71,9 +80,14 @@ ol, ul {
     background: #fff;
     position: relative;
     line-height: 1.5;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.04);
 }
 .header .left{
 	float: left;
+}
+.header .right{
+    float: right;
+    margin-top: 8px;
 }
 .header .logo{
 	float: left;
@@ -93,7 +107,7 @@ ol, ul {
     margin-right: 20px;
 }
 .naver a {
-    font-size: 16px;
+    font-size: 14px;
     color: #3a3a3a;
     position: relative;
     line-height: 40px;
@@ -102,6 +116,58 @@ ol, ul {
 .naver a:hover{
 	color: #ca141d;
 }
+.right input.search-text{
+    width: 290px;
+    height: 35px;
+    vertical-align: middle;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    text-indent: 15px;
+    border: 1px solid #f0f0f0;
+    outline: 0;
+    margin-right: -30px;
+}
+.right input.search-btn{
+    vertical-align: middle;
+    width: 48px;
+    height: 35px;
+    border-radius: 15px;
+    border: 1px solid #f0f0f0;
+    background-color: #f0f0f0;
+}
+.right .el-button.is-circle{
+    padding: 10.5px;
+    background: #f0f0f0;
+    vertical-align: middle;
+    border: 0;
+
+}
+/* 公告 */
+.hotPro-right{
+    float: right;
+    margin-top: 18px;
+}
+.hotPro-right .notice {
+    width: 300px;/*单行显示，超出隐藏*/
+    height: 50px;/*固定公告栏显示区域的高度*/
+    /* padding: 0 30px; */
+    /* background-color: #b3effe; */
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+
+}
+.notice ul li {
+    list-style: none;
+    line-height: 48px;
+    /*以下为了单行显示，超出隐藏*/
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
 /*banner*/
 #banner{
     height: 451px
@@ -129,6 +195,13 @@ ol, ul {
 #hotPro{
 	width: 1200px;
 	margin: 0 auto;
+}
+.orderBy{
+    float: left;
+    line-height: 5;
+    font-size: 16px;
+    margin-left: 48px;
+    cursor: pointer;
 }
 .grid-img{
 	margin: 36px auto 0;
@@ -184,14 +257,23 @@ ol, ul {
 .grid-items .grid-price{
     font-size: 14px;
     font-weight: 400;
-    margin: 0 20px 20px;
+    margin: 0 20px 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #cc0e11;
+    text-align: center;
+    margin-top: 15px;
+}
+.grid-items .grid-sales{
+    font-size: 12px;
+    font-weight: 400;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #cc0e11;
     text-align: center;
 }
-
 /*底部广告*/
 #bottom_gg{
 	width: 1200px;
@@ -306,8 +388,99 @@ ol, ul {
 .el-table__row img{ 
     width: 39%;
 }
+.el-table{
+    min-height: 400px;
+}
 
 /*登录注册弹窗*/
 .el-dialog--center .el-tabs__header{
 	padding: 0 0 0 81px;
+}
+
+/* 热门问题 */
+#login-body{
+    
+}
+.login-header{
+    background-color: #333333;
+    height: 67px;
+    min-width: 960px;
+}
+.login-body{
+    width: 1200px;
+    height: 67px;
+    margin: 0px auto;
+    border: 0px;
+    position: relative;
+}
+.login-body .login-cont{
+    float: left;
+    width: 143px;
+    margin-right: 20px;
+}
+.login-body .login-cont img{
+    margin-left: 4px;
+    margin-top: 17px;
+}
+.login-body .login-name{
+    color: white;
+    font-size: 20px;
+    height: 67px;
+    line-height: 50px;
+    font-family: "arial";
+    padding-top: 14px;
+}
+.login-main{
+    width: 1200px;
+    margin: 0 auto;
+    color: #BBB;
+    font-size: 14px;
+}
+.faq-list {
+    border: 1px solid #d0d0d0;
+    padding: 24px 36px 0;
+    margin-bottom: 20px;
+}
+.faq-list .faq-area {
+    margin-bottom: 32px;
+}
+.faq-area .h {
+    padding-bottom: 24px;
+    border-bottom: 1px dashed #c5c5c5;
+}
+.faq-area .h h3 {
+    background-repeat: repeat-y;
+    background-position: right 0;
+    display: inline-block;
+    padding: 3px 258px 1px 9px;
+    font-size: 14px;
+    color: rgb(26, 24, 24);
+    font-weight: 700;
+}
+.faq-area .b {
+    padding: 11px 19px 0;
+    color: #666;
+    line-height: 18px;
+    zoom: 1;
+}
+/* 保修政策 */
+.help-detail-area {
+    border: 1px solid #d0d0d0;
+}
+.help-detail-area .h {
+    padding: 24px 0;
+    border-bottom: 1px dashed #c5c5c5;
+    margin: 0 26px;
+}
+.help-detail-area .b {
+    color: #666;
+    line-height: 18px;
+}
+.help-detail-area .b {
+    padding: 11px 22px 28px;
+    min-height: 100px;
+    _height: 100px;
+    margin: 0 26px;
+    position: relative;
+    z-index: 2;
 }

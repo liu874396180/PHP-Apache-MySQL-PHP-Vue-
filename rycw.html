@@ -1,0 +1,151 @@
+<html>
+
+	<head>
+		<title>华为商城</title>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" type="text/css" href="static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/public.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="static/css/elementui.css"/>
+		<link rel="shortcut icon" href="favicon.ico">
+		<script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="static/js/vue.js"></script>
+		<script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body style="min-width: 1200px; overflow-x: auto;background: #f5f5f5;">
+		<div id="cdnvue">
+			<div id="" class="top_gg">
+				<a href="">
+					<!-- <img src="static/image/top_gg.jpg" /> -->
+				</a>
+			</div>
+			
+			<!--header-->
+			<div class="header" style="">
+				<div style="width: 1200px;margin: 0 auto;">
+					<span style="margin: 10px 0;display: inline-block;color:#666"><a href="index.html" style="color:#666">首页</a> > 荣耀畅玩系列</span>
+				</div>
+				</div>
+			<!--热销单品-->
+			<div id="hotPro">
+				<h2 class="title">荣耀畅玩系列</h2>
+				<div class="layout">
+					<ul class="grid_ul">
+						<li class="grid-items" v-for="(item,index) in jsonData">
+							<a :href="`detail.html?id=${item.id}`">
+								<p class="grid-img">
+									<!--<img :src=`static/image/${item.img}` />-->
+									<img :src="'sas/upload/'+item.img" />
+								</p>
+								<p class="grid-title">{{item.name}}</p>
+								<!-- <p class="grid-desc">{{item.jianJie}}</p> -->
+								<p class="grid-price">¥{{item.price}}</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部广告-->
+			<div id="bottom_gg">
+				<!-- <img src="static/image/bottomgg2.jpg" /> -->
+			</div>
+			<!--底部服务-->
+			<div class="slogan-container">
+				<div class="slogan">
+					<ul>
+						<li class="s1">
+							<i></i> 百强企业 品质保证
+						</li>
+						<li class="s2">
+							<i></i> 7天退货 15天换货
+						</li>
+						<li class="s3">
+							<i></i> 48元起免运费
+						</li>
+						<li class="s4">
+							<i></i> 1000家维修网点 全国联保
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--底部footer版权-->
+			<div id="footer">
+				<div class="foot">
+					<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
+					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
+					<p class=""></p>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			// 初始化swiper
+			var mySwiper = new Swiper('.swiper-container', {
+				updateOnImagesReady: true,
+				direction: 'horizontal',
+				loop: true,
+				autoplay: 8000,
+				observer: true, //修改swiper自己或子元素时，自动初始化swiper
+				// 如果需要前进后退按钮
+				nextButton: '.swiper-button-next',
+				prevButton: '.swiper-button-prev',
+				pagination: '.swiper-pagination',
+			})
+		})
+	</script>
+	<!--vue-->
+	<script type="text/javascript">
+		// 注册
+		Vue.component('my-component', {});
+		var WEITUOSERVER = new Vue({
+			el: '#cdnvue',
+			data: {
+				activeName: 'first',
+				jsonData: [],
+				dialogTableVisible: false,
+        		dialogFormVisible: false,
+        		form: {
+		          userName: '',
+		          userPassword: '',
+		          userPassword_2:'', //确认密码
+		          type: [],
+		        },
+		        formLabelWidth: '120px',
+		        
+			},
+			created() {
+				this.gatData();
+			},
+			methods: {
+				handleClick(tab, event) {
+			        console.log(tab, event);
+			      },
+				gatData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/search.php",
+			             data: {"p_class":"30","search":"search"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				 //uuid
+				uuid () {
+					function _s4(){
+						  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+						}
+					return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
+				  },
+				
+			}
+
+		})
+	</script>
+
+</html>

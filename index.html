@@ -15,10 +15,11 @@
 	</head>
 
 	<body style="min-width: 1200px; overflow-x: auto;background: #f5f5f5;">
+		<div class="toTop" onClick="window.scrollTo(0,0);"><i class="el-icon-upload2"></i></div>
 		<div id="cdnvue">
 			<div id="" class="top_gg">
 				<a href="">
-					<img src="static/image/top_gg.jpg" />
+					<!-- <img src="static/image/top_gg.jpg" /> -->
 				</a>
 			</div>
 			<div id="" class="shortcut">
@@ -26,25 +27,19 @@
 					<div class="s-sub">
 						<ul>
 							<li>
-								<a href="">首页</a>
+								<a href="javascript:void(0)">首页</a>
 							</li>
 							<li>
-								<a href="">华为官网</a>
+								<a href="systemInfo.html">商城简介</a>
+							</li>
+							<!-- <li>
+								<a href="">帮助中心 用户反馈</a>
+							</li> -->
+							<li>
+								<a href="baoxiu.html">保修政策</a>
 							</li>
 							<li>
-								<a href="">荣耀官网</a>
-							</li>
-							<li>
-								<a href="">花粉俱乐部</a>
-							</li>
-							<li>
-								<a href="">帮助中心</a>
-							</li>
-							<li>
-								<a href="">优购码</a>
-							</li>
-							<li>
-								<a href="">企业购</a>
+								<a href="problem.html">热门问题</a>
 							</li>
 						</ul>
 					</div>
@@ -52,10 +47,13 @@
 						<ul>
 							<li>
 								<a href="javascript:void(0)" v-if="!userInfo.userName" @click="dialogFormVisible = true">请登录/注册</a>
-								<a href="javascript:void(0)" v-else>{{userInfo.userName}}&emsp;|</a>
+								<a href="userInfo.html" v-else>{{userInfo.userName}}</a>
 							</li>
+							<!-- <li v-if="userInfo.userName">
+								<a href="javascript:void(0)">积分：{{userInfo.jifen}}</a>
+							</li> -->
 							<li>
-								<a href="javascript:void(0)" @click="car">购物车</a>
+								<a href="javascript:void(0)" @click="car">|&emsp;购物车</a>
 							</li>
 							<li>
 								<a href="javascript:void(0)" @click="order">|&emsp;订单</a>
@@ -77,44 +75,47 @@
 						<div class="naver">
 							<ul id="naver-list">
 								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>华为专区</span>
-									</a>
-								</li>
-								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀专区</span>
+									<a href="ry.html" target="_blank">
+										<span>荣耀</span>
 									</a>
 								</li>
 								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>HUAWEI P20</span>
+										<a href="p.html" target="_blank">
+											<span>HUAWEI P系列</span>
+										</a>
+									</li>
+								<li id="honor" class="">
+									<a href="rycw.html" target="_blank">
+										<span>荣耀畅玩系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀10</span>
-									</a>
-								</li>
-								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>nova 3i</span>
+									<a href="mate.html" target="_blank">
+										<span>HUAWEI Mate系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀V10</span>
+										<a href="nova.html" target="_blank">
+											<span>HUAWEI nova系列</span>
+										</a>
+									</li>
+								<!-- <li id="huawei" class="">
+									<a href="nova_4.html" target="_blank">
+										<span>华为畅享系列</span>
 									</a>
-								</li>
+								</li> -->
 							</ul>
 						</div>
 					</div>
 					<!--导航右边部分-->
 					<div class="right">
-
+						<input type="text" v-model="searchVal" placeholder="荣耀10降价" class="search-text">
+						<el-button class="search-btn" icon="el-icon-search" @click="onsearchVal" circle></el-button>
+						<!-- <input type="submit" class="search-btn" @click="onsearchVal" value="搜索"> -->
 					</div>
 				</div>
 			</div>
+			
 			<!--轮播图-->
 			<div id="banner">
 				<div class="swiper-container">
@@ -134,32 +135,90 @@
 
 			<div class="show_list">
 				<div class="show_lists">
-					<img src="static/image/8x.png" />
+					<a href="detail.html?id=f02b6799-1e3b-2f86-f"><img src="static/image/8x.png" /></a>
 				</div>
 				<div class="show_lists">
-					<img src="static/image/p20.jpg" />
+						<a href="detail.html?id=abc081d8-060c-5d3a-6"><img src="static/image/p20.jpg" /></a>
 				</div>
 				<div class="show_lists">
-					<img src="static/image/nova3.png" />
+						<a href="detail.html?id=4fb439ab-bb4e-d818-d"><img src="static/image/nova3.png" /></a>
 				</div>
 				<div class="show_lists">
-					<img src="static/image/note10.png" />
+						<a href="detail.html?id=219129f3-6419-a3bf-e"><img src="static/image/note10.png" /></a>
 				</div>
 			</div>
-			<!--热销单品-->
-			<div id="hotPro">
-				<h2 class="title">热销单品</h2>
+			<!--全部产品-->
+			<!--<img :src=`static/image/${item.img}` />-->
+			<!-- <a :href="`gonggao.html?t=${item.g_title}`" target="_blank"> -->
+				<!-- </a> -->
+			<!-- <div id="hotPro" class="layout">
+				<div class="layout">
+						<h2 class="title" style="float:left">全部产品</h2>
+						<div class="orderBy">
+								<span @click="orderBy('price')">价格从低到高</span>&emsp;|&emsp;<span @click="orderBy('sales')">销量从低到高</span>&emsp;|
+								<span @click="orderBy2('price')">价格从高到低</span>&emsp;|&emsp;<span @click="orderBy2('sales')">销量从高到低</span>
+						</div>
+						<div class="hotPro-right">
+							<span>公告：</span>
+							<div class="notice">
+								<ul>
+								<li v-for="(item,index) in jsonggData" @click="toggDetail(item.g_title)" style="cursor:pointer">
+											{{item.g_title}}
+								</li>
+								</ul>
+								</div>
+						</div>
+				</div>
 				<div class="layout">
 					<ul class="grid_ul">
 						<li class="grid-items" v-for="(item,index) in jsonData">
+							<a :href="`detail.html?id=${item.id}`">
+								<p class="grid-img">
+									
+									<img :src="'sas/upload/'+item.img" />
+								</p>
+								<p class="grid-title">{{item.name}}</p>
+								<p class="grid-desc">{{item.jianJie}}</p>
+								<p class="grid-price">¥{{item.price}}</p>
+								<p class="grid-sales">销量：{{item.sales}}</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div> -->
+			<!--热销单品-->
+			<div id="hotPro" class="layout">
+				<div class="layout">
+					<div class="layout">
+						<h2 class="title" style="float:left">热销单品</h2>
+						<!-- <div class="orderBy">
+								<span @click="orderBy('price')">价格从低到高</span>&emsp;|&emsp;<span @click="orderBy('sales')">销量从低到高</span>&emsp;|
+								<span @click="orderBy2('price')">价格从高到低</span>&emsp;|&emsp;<span @click="orderBy2('sales')">销量从高到低</span>
+						</div> -->
+						<div class="hotPro-right">
+							<span>公告：</span>
+							<div class="notice">
+								<ul>
+								<li v-for="(item,index) in jsonggData" @click="toggDetail(item.g_title)" style="cursor:pointer">
+											{{item.g_title}}
+								</li>
+								</ul>
+								</div>
+						</div>
+				</div>
+				</div>
+				<div class="layout">
+					<ul class="grid_ul">
+						<li class="grid-items" v-for="(item,index) in jsonHotData">
 							<a :href="`detail.html?id=${item.id}`">
 								<p class="grid-img">
 									<!--<img :src=`static/image/${item.img}` />-->
 									<img :src="'sas/upload/'+item.img" />
 								</p>
 								<p class="grid-title">{{item.name}}</p>
-								<p class="grid-desc">{{item.jianJie}}</p>
+								<!-- <p class="grid-desc">{{item.jianJie}}</p> -->
 								<p class="grid-price">¥{{item.price}}</p>
+								<p class="grid-sales">销量：{{item.sales}}</p>
 							</a>
 						</li>
 					</ul>
@@ -167,7 +226,7 @@
 			</div>
 			<!--底部广告-->
 			<div id="bottom_gg">
-				<img src="static/image/bottomgg2.jpg" />
+				<!-- <img src="static/image/bottomgg2.jpg" /> -->
 			</div>
 			<!--底部服务-->
 			<div class="slogan-container">
@@ -246,6 +305,27 @@
 			</el-dialog>
 		</div>
 	</body>
+	<script>
+	/*
+	* 参数说明
+	* obj : 动画的节点，本例中是ul
+	* top : 动画的高度，本例中是-35px;注意向上滚动是负数
+	* time : 动画的速度，即完成动画所用时间，本例中是500毫秒，即marginTop从0到-35px耗时500毫秒
+	* function : 回调函数，每次动画完成，marginTop归零，并把此时第一条信息添加到列表最后;
+	* 
+	*/
+	function noticeUp(obj,top,time) {
+	$(obj).animate({
+	marginTop: top
+	}, time, function () {
+	$(this).css({marginTop:"0"}).find(":first").appendTo(this);
+	})
+	}
+		$(function () {
+		// 调用 公告滚动函数
+		setInterval("noticeUp('.notice ul','-50px',500)", 2000);
+		});
+</script>
 	<script type="text/javascript">
 		$(function() {
 			// 初始化swiper
@@ -270,20 +350,25 @@
 			el: '#cdnvue',
 			data: {
 				activeName: 'first',
-				jsonData: [],
+				jsonData: [],  //主页产品
+				jsonHotData:[], // 热销推荐的 显示两行
+				jsonggData: [], // 公告数据
+				searchVal:"", // 搜索
 				dialogTableVisible: false,
-        		dialogFormVisible: false,
-        		form: {
-		          userName: '',
-		          userPassword: '',
-		          userPassword_2:'', //确认密码
-		          type: [],
-		        },
-		        formLabelWidth: '120px',
-		        userInfo: window.sessionStorage.user ? JSON.parse(window.sessionStorage.user ) : "",
+				dialogFormVisible: false,
+				form: {
+					userName: '',
+					userPassword: '',
+					userPassword_2:'', //确认密码
+					type: [],
+				},
+				formLabelWidth: '120px',
+				userInfo: window.sessionStorage.user ? JSON.parse(window.sessionStorage.user ) : "",
 			},
 			created() {
 				this.gatData();
+				this.gatHotData();
+				this.gatggData();
 			},
 			methods: {
 				handleClick(tab, event) {
@@ -298,6 +383,79 @@
 			             dataType: "json",
 						success: function(res) {
 							that.jsonData = res.data;
+						},
+					});
+				},
+				// 搜索
+				onsearchVal(){
+					var arg = encodeURI(encodeURI(this.searchVal));
+					window.location.href = "index_search.html?arg="+arg;
+					// var that = this;
+					// $.ajax({
+					// 	type: "GET",
+			    //          url: "php/index.php",
+			    //          data: {"searchVal":that.searchVal,"searchName":"searchName"},
+			    //          dataType: "json",
+					// 	success: function(res) {
+					// 		that.jsonData = res.data;
+					// 	},
+					// });
+				},
+				// 排序--升序
+				orderBy(arg){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"orderBy":arg,"paixu":"paixu"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// 排序--降序
+				orderBy2(arg){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"orderBy":arg,"paixu":"paixu","jiangxu":"jiangxu"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonData = res.data;
+						},
+					});
+				},
+				// hot 推荐产品--显示两行
+				gatHotData(){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "php/index.php",
+			             data: {"orderBy":"sales","paixu":"paixu","jiangxu":"jiangxu"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonHotData = res.data.slice(0,8);
+						},
+					});
+				},
+				// 公告跳转
+				toggDetail(arg){
+					var arg = encodeURI(encodeURI(arg));
+					window.location.href = "gonggao.html?t="+arg;
+
+				},
+				// 获取公告
+				gatggData() {
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "sas/gg.php",
+			             data: {"ggallList":"allList"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonggData = res;
 						},
 					});
 				},
@@ -401,7 +559,16 @@
 				        });
 					}
 				},
-				order(){}
+				order(){
+					if(window.sessionStorage.user){
+						window.location.href = "order.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				}
 			}
 
 		})

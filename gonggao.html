@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="static/css/elementui.css" />
+    <link rel="shortcut icon" href="favicon.ico">
+    <script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue.js"></script>
+    <script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+    <title>公告详情</title>
+</head>
+
+<body id="login-body">
+    <div class="login-header">
+        <div class="login-body">
+            <div class="login-cont">
+                <a href="index.html"><img src="static/image/head-top.png" alt=""></a>
+            </div>
+            <div class="login-name">
+                <b style="font-size: 18px;margin-top: -5px;float: left;color:#cccccc;">|</b>
+                <b style="font-size: 18px;margin-top: -3px;float: left; margin-left:18px;">华为商城</b>
+            </div>
+        </div>
+    </div>
+    <div class="login-main" id="ggdetail">
+        <span style="    margin: 10px 0;display: inline-block;color:#666"><a href="index.html" style="color:#666">首页</a> > 公告详情</span>
+        <div class="help-detail-area">
+			<div class="h">
+				<h1 style="font-size: 22px; color: #191919;text-align: center; padding: 22px 0 28px;">{{jsonData[0].g_title}}</h1>
+            </div>
+            <div style="font-size: 14px;color: #3a3a3a;line-height: 18px;padding: 50px;">
+                {{jsonData[0].g_detail}}
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    // 注册
+    Vue.component('my-component', {});
+    var WEITUOSERVER = new Vue({
+        el: '#ggdetail',
+        data: {
+            jsonData: [{g_title:"",g_detail:""}],
+            t:""
+        },
+        created() {
+            this.t = this.GetQueryString("t");
+            this.gatData();
+        },
+        methods: {
+            gatData() {
+                var that = this;
+                that.t = decodeURI(that.t)
+                $.ajax({
+                    type: "GET",
+                    url: "sas/gg.php",
+			        data: {"g_title":that.t,"checkone":"checkone"},
+                    dataType: "json",
+                    success: function(res) {
+                        that.jsonData = res;
+                    },
+                });
+            },
+            GetQueryString(name){
+                 var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                 var r = window.location.search.substr(1).match(reg);
+                 if(r!=null)return  unescape(r[2]); return null;
+            },
+         
+           
+        }
+		})
+</script>
+</html>

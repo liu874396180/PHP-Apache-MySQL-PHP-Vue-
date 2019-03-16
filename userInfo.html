@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="static/css/elementui.css" />
+    <link rel="shortcut icon" href="favicon.ico">
+    <script src="static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="static/js/vue.js"></script>
+    <script src="static/js/elementui.js" type="text/javascript" charset="utf-8"></script>
+    <title>华为商城简介</title>
+    <style>
+       #userinfo .el-input__inner{
+           width: auto;
+       }
+       #userinfo .address .el-input__inner{
+           width: 500px;
+       }
+       #userinfo .el-input{
+           width: auto;
+       }
+    </style>
+</head>
+
+<body id="login-body">
+ <div id="userinfo">
+    <div class="login-header">
+        <div class="login-body">
+            <div class="login-cont">
+                <a href="index.html"><img src="static/image/head-top.png" alt=""></a>
+            </div>
+            <div class="login-name">
+                <b style="font-size: 18px;margin-top: -5px;float: left;color:#cccccc;">|</b>
+                <b style="font-size: 18px;margin-top: -3px;float: left; margin-left:18px;">个人中心</b>
+            </div>
+        </div>
+    </div>
+    <div class="login-main">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <!-- 修改昵称 -->
+            <el-tab-pane label="修改昵称" name="first">
+                <el-form>
+                    <el-form-item label="昵称" label-width="50px">
+                        <el-input v-model="userName" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" plain style="width: 19%;" @click="saveName">保存</el-button>
+            </el-tab-pane>
+            <!-- 修改密码 -->
+            <el-tab-pane label="修改密码" name="second">
+                <el-form>
+                    <el-form-item label="旧密码&emsp;" label-width="68px">
+                        <el-input v-model="oldPassword" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="新密码&emsp;" label-width="68px">
+                        <el-input v-model="newPassword" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" label-width="68px">
+                        <el-input v-model="newPassword2" type="password" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" plain style="width: 19%;" @click="savePassword">保存</el-button>
+            </el-tab-pane>
+            <!-- 添加收货地址 -->
+            <el-tab-pane label="添加收货地址" name="third">
+                <el-form class="address">
+                    <el-form-item label="新增地址" label-width="68px">
+                        <el-input v-model="userAddress"  autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" plain style="width: 19%;" @click="saveAddress">保存</el-button>
+            </el-tab-pane>
+            <!-- 收货地址管理 -->
+            <el-tab-pane label="收货地址管理" name="five">
+                    <el-table
+					:data="jsonAddressData"
+					style="width: 100%">
+					<el-table-column
+						prop="userAddress"
+						label="地址"
+						>
+					</el-table-column>
+					<el-table-column
+						label="操作"
+						>
+						<template slot-scope="scope">
+							<a href="javascript:void(0)" style="color:#1989fa" @click="deletAddress(scope.row.userAddress)">删除</a>
+						</template>
+					</el-table-column>
+					</el-table>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    // 注册
+    Vue.component('my-component', {});
+    var WEITUOSERVER = new Vue({
+        el: '#userinfo',
+        data: {
+            jsonData: [],
+            userName:JSON.parse(window.sessionStorage.user).userName,
+            userId:JSON.parse(window.sessionStorage.user).userId,
+            activeName: 'first',
+            userInfo:JSON.parse(window.sessionStorage.user),
+            oldPassword:"",
+            newPassword:"",
+            newPassword2:"",
+            userAddress:"",
+            jsonAddressData:[]
+        },
+        created() {
+            this.gatAddressData();
+        },
+        methods: {
+            handleClick(tab, event) {
+                console.log(tab, event);
+            },
+            gatData() {
+                var that = this;
+                $.ajax({
+                    type: "GET",
+                     url: "php/car.php",
+                     data: {"userId":JSON.parse(window.sessionStorage.user).userId},
+                     dataType: "json",
+                    success: function(data) {
+                        that.jsonData = data.data;
+                    },
+                });
+            },
+            gatAddressData(){
+                var that = this;
+                var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+                if(!user){
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                        url: "php/detail.php",
+                        data: {"userId":user.userId,"getAddressdata":"getAddressdata"},
+                        dataType: "json",
+                    success: function(res) {
+                        that.jsonAddressData = res.data;
+                    },
+                });
+            },
+            deletAddress(userAddress){
+                var that = this;
+                var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+                if(!user){
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                     url: "php/detail.php",
+                     data: {"userAddress":userAddress,"userId":user.userId,"deletAddress":"deletAddress"},
+                     dataType: "json",
+                    success: function(data) {
+                        that.$message({
+                            message: "删除成功",
+                            type: 'success'
+                        });
+                        that.gatAddressData();
+                    },
+                    error:function(data){
+                        that.$message({
+                            message: data.responseText,
+                            type: 'warning'
+                        });
+                        // window.location.reload();
+                    }
+                });
+            },
+            saveName(){
+                var that = this;
+                if(!this.userName){
+                    that.$message({
+                        message: "用户名不能为空",
+                        type: 'warning'
+                    });
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                     url: "php/index.php",
+                     data: {"userName":that.userName,"changeName":"changeName","userId":that.userId},
+                     dataType: "json",
+                    success: function(data) {
+                        if(data.resultCode==200){
+                            that.$message({
+                                message: "修改成功",
+                                type: 'success'
+                            });
+                         var olduser = JSON.parse(window.sessionStorage.user);
+                         olduser.userName = that.userName;
+                         window.sessionStorage.user = JSON.stringify(olduser);
+                        }else if(data.resultCode==0001){
+                            that.$message({
+                                message: data.message,
+                                type: 'warning'
+                            });
+                        }
+                        
+                    },
+                    error:function(data){
+                        that.$message({
+                            message: data.responseText,
+                            type: 'warning'
+                        });
+                    }
+                });
+            },
+            savePassword(){
+                var that = this;
+                if(!this.oldPassword){
+                    that.$message({
+                        message: "旧密码不能为空",
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if((this.newPassword != this.newPassword2) || this.newPassword2==""){
+                    that.$message({
+                        message: "两次新密码不一致",
+                        type: 'warning'
+                    });
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                     url: "php/index.php",
+                     data: {"password":that.newPassword,"changePassword":"changePassword","userId":that.userId},
+                     dataType: "json",
+                    success: function(data) {
+                        if(data.resultCode==200){
+                            that.$message({
+                                message: "修改成功",
+                                type: 'success'
+                            });
+                        }else if(data.resultCode==0001){
+                            that.$message({
+                                message: data.message,
+                                type: 'warning'
+                            });
+                        }
+                        
+                    }
+                });
+            },
+            saveAddress(){
+                var that = this;
+                if(!this.userAddress){
+                    that.$message({
+                        message: "地址不能为空",
+                        type: 'warning'
+                    });
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                     url: "php/index.php",
+                     data: {"userAddress":that.userAddress,"addUserAddress":"addUserAddress","userId":that.userId},
+                     dataType: "json",
+                    success: function(data) {
+                        if(data.resultCode==200){
+                            that.$message({
+                                message: "添加地址成功",
+                                type: 'success'
+                            });
+                            that.userAddress = "";
+                            that.gatAddressData();
+                        }else if(data.resultCode==0001){
+                            that.$message({
+                                message: data.message,
+                                type: 'warning'
+                            });
+                        }
+                        
+                    }
+                });
+            }
+
+        }
+    })
+</script>
+</html>

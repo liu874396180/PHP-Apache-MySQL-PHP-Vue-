@@ -22,7 +22,7 @@ if( !empty($_GET['users'])) {
 	suer ($conn);
 }
 if( !empty($_GET['pid']) && !empty($_GET['add'])) {
-	addCar($conn);
+	add_products($conn);
 };
 //逻辑编写函数-----------------------------------------------------------------------------------
 
@@ -57,10 +57,10 @@ function suer ($conn){
 	    echo "0 结果";
 	}
 }
-//添加购物车
-function addCar($conn){
-    $sql = "INSERT INTO productlist (id,name,price,jianJie,img)
-    VALUES ('{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}')";
+//添加产品
+function add_products($conn){
+    $sql = "INSERT INTO productlist (id,name,price,jianJie,img,p_class)
+    VALUES ('{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}','{$_GET['p_class']}')";
         
     if ($conn->query($sql) === TRUE) {
         echo "添加成功";

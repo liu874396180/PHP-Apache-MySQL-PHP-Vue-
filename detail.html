@@ -17,7 +17,7 @@
 		<div id="pdetail">
 			<div id="" class="top_gg">
 				<a href="">
-					<img src="static/image/top_gg.jpg" />
+					<!-- <img src="static/image/top_gg.jpg" /> -->
 				</a>
 			</div>
 			<div id="" class="shortcut">
@@ -28,36 +28,33 @@
 								<a href="index.html">首页</a>
 							</li>
 							<li>
-								<a href="">华为官网</a>
-							</li>
-							<li>
-								<a href="">荣耀官网</a>
-							</li>
-							<li>
-								<a href="">花粉俱乐部</a>
-							</li>
-							<li>
-								<a href="">帮助中心</a>
-							</li>
-							<li>
-								<a href="">优购码</a>
-							</li>
-							<li>
-								<a href="">企业购</a>
-							</li>
+									<a href="systemInfo.html">商城简介</a>
+								</li>
+								<!-- <li>
+									<a href="">帮助中心 用户反馈</a>
+								</li> -->
+								<li>
+									<a href="baoxiu.html">保修政策</a>
+								</li>
+								<li>
+									<a href="problem.html">热门问题</a>
+								</li>
 						</ul>
 					</div>
 					<div class="s-right">
 						<ul>
 							<li>
 								<a href="index.html" v-if="!userInfo">未登录</a>
-								<a href="javascript:void(0)" v-else>{{userInfo.userName}}</a>
+								<a href="userInfo.html" v-else>{{userInfo.userName}}</a>
 							</li>
+							<!-- <li v-if="userInfo">
+								<a href="javascript:void(0)">积分：{{userInfo.jifen}}</a>
+							</li> -->
 							<!--<li>
 								<a href="javascript:void(0)" @click="dialogFormVisible = true">注册</a>
 							</li>-->
 							<li>
-								<a href="javascript:void(0)" @click="order">|&emsp;订单</a>
+								<a href="javascript:void(0)" @click="isOrder">|&emsp;订单</a>
 							</li>
 							<li>
 								<a href="javascript:void(0)" @click="car">|&emsp;购物车</a>
@@ -71,52 +68,53 @@
 				<div id="" class="layout">
 					<div class="left">
 						<div class="logo">
-							<a href="index.html">
-							<img src="static/image/logo.png" /></a>
+							<img src="static/image/logo.png" />
 						</div>
 						<div class="naver">
 							<ul id="naver-list">
 								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>华为专区</span>
-									</a>
-								</li>
-								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀专区</span>
+									<a href="ry.html" target="_blank">
+										<span>荣耀</span>
 									</a>
 								</li>
 								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>HUAWEI P20</span>
+										<a href="p.html" target="_blank">
+											<span>HUAWEI P系列</span>
+										</a>
+									</li>
+								<li id="honor" class="">
+									<a href="rycw.html" target="_blank">
+										<span>荣耀畅玩系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀10</span>
-									</a>
-								</li>
-								<li id="huawei" class="">
-									<a href="" target="_blank">
-										<span>nova 3i</span>
+									<a href="mate.html" target="_blank">
+										<span>HUAWEI Mate系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
-									<a href="" target="_blank">
-										<span>荣耀V10</span>
+										<a href="nova.html" target="_blank">
+											<span>HUAWEI nova系列</span>
+										</a>
+									</li>
+								<!-- <li id="huawei" class="">
+									<a href="nova_4.html" target="_blank">
+										<span>华为畅享系列</span>
 									</a>
-								</li>
+								</li> -->
 							</ul>
 						</div>
 					</div>
 					<!--导航右边部分-->
 					<div class="right">
-
+						<input type="text" v-model="searchVal" placeholder="荣耀10降价" class="search-text">
+						<el-button class="search-btn" icon="el-icon-search" @click="onsearchVal" style="padding: 12.5px;" circle></el-button>
+						<!-- <input type="submit" class="search-btn" @click="onsearchVal" value="搜索"> -->
 					</div>
 				</div>
 			</div>
-			<div id="" class="layout">
-				<p><a href="index.html">首页</a>>手机>华为>{{jsonData.jianJie}}</p>
+			<div id="" class="layout" style="min-height: 560px;">
+				<p style="color:#666"><a href="index.html" style="color:#666"> 首页 </a> > 手机 > {{jsonData.name}} > {{jsonData.jianJie}}</p>
 				<div class="">
 					<div id="" class="de-con-left">
 						<img :src="'sas/upload/'+jsonData.img"/>
@@ -125,24 +123,25 @@
 						<p class="de-con-right-jianJie">{{jsonData.name}}&emsp;<span style="font-size: 18px;color: #999;">{{jsonData.jianJie}}</span></p>
 						<div class="de-product-info">
 							<p>价&ensp;&ensp;格：<span style="font-size: 24px;color: #ca141d;"><em>¥</em> {{jsonData.price}}</span></p>
-							<p>限时特价： <span>限时优惠300元</span></p>
+							<!-- <p>限时特价： <span>限时优惠300元</span></p> -->
 							<p>整点赠送：<span>10点/16点/20点下单前500赠畅玩手环A2（荣耀指定手机共享）</span></p>
-							<p>积分翻倍：<span>活动赠送翻倍积分，积分可抵现~</span></p>
+							<p>整点赠送：<span>10:00前100下单送晨光开学礼包</span></p>
+							<!-- <p>积分翻倍：<span>活动赠送翻倍积分，积分可抵现~</span></p> -->
 						</div>
 						<p>服务说明 已满48元已免运费 由华为商城负责发货，并提供售后服务</p>
 						<p>商品编码 2601010038102</p>
 						<div class="">
 							颜色选择: &emsp;
-						    <el-radio v-model="radio_color" label="1" border>宝石蓝</el-radio>
-						    <el-radio v-model="radio_color" label="2" border>香槟金</el-radio>
-						    <el-radio v-model="radio_color" label="3" border>幻影紫</el-radio>
-						    <el-radio v-model="radio_color" label="4" border>海鸥灰</el-radio>
-						    <el-radio v-model="radio_color" label="5" border>铃兰白</el-radio>
+						    <el-radio v-model="radio_color" label="宝石蓝" border>宝石蓝</el-radio>
+						    <el-radio v-model="radio_color" label="香槟金" border>香槟金</el-radio>
+						    <el-radio v-model="radio_color" label="幻影紫" border>幻影紫</el-radio>
+						    <el-radio v-model="radio_color" label="海鸥灰" border>海鸥灰</el-radio>
+						    <el-radio v-model="radio_color" label="铃兰白" border>铃兰白</el-radio>
 						</div>
 						<div class="" style="margin-top: 10px;">
 							选择版本: &emsp;
-						    <el-radio v-model="radio_v" label="1" border>全网通6GB+64GB</el-radio>
-						    <el-radio v-model="radio_v" label="2" border>全网通6GB+128GB</el-radio>
+						    <el-radio v-model="radio_v" label="全网通6GB+64GB" border>全网通6GB+64GB</el-radio>
+						    <el-radio v-model="radio_v" label="全网通6GB+128GB" border>全网通6GB+128GB</el-radio>
 						</div>
 						<div class=""style="margin-top: 10px;">
 							<el-row>
@@ -161,9 +160,18 @@
 				>
 				<el-form :model="form">
 					<el-form-item label="收货地址" :label-width="form.formLabelWidth">
-					  <el-input v-model="form.address" autocomplete="off"></el-input>
+						<!-- <el-input v-model="form.address" autocomplete="off"></el-input> -->
+						<el-select v-model="form.address" placeholder="请选择">
+								<el-option v-for="item in jsonAddressData" :key="item.userAddress" :label="item.userAddress" :value="item.userAddress"></el-option>
+							</el-select>
 					</el-form-item>
-				  </el-form>
+					<el-form-item label="收货人" :label-width="form.formLabelWidth">
+					  <el-input v-model="form.userName" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="手机号" :label-width="form.formLabelWidth">
+					  <el-input v-model="form.mobile" autocomplete="off"></el-input>
+					</el-form-item>
+				</el-form>
 				<span slot="footer" class="dialog-footer">
 					<el-button @click="dialog_order = false">取 消</el-button>
 					<el-button type="primary" @click="sure_order">确 定</el-button>
@@ -187,17 +195,20 @@
 			data: {
 				jsonData: {},
 				dialog_order:false, //下单弹窗
-				form:{address:"河南省郑州市二七区",formLabelWidth:"120px"},
+				searchVal:"", // 搜索
+				jsonAddressData:[],
+				form:{address:"河南省郑州市二七区",formLabelWidth:"120px",userName:"",mobile:""},
 				dialogTableVisible: false,
         		dialogFormVisible: false,
         		pid:"",
-        		radio_color:"1",
-        		radio_v:"1",
+        		radio_color:"宝石蓝",
+        		radio_v:"全网通6GB+64GB",
         		userInfo: window.sessionStorage.user && JSON.parse(window.sessionStorage.user),
 			},
 			created() {
 				this.pid = this.GetQueryString("id");
 				this.gatData();
+				this.gatAddressData();
 			},
 			methods: {
 				gatData() {
@@ -212,6 +223,22 @@
 						},
 					});
 				},
+				gatAddressData(){
+					var that = this;
+					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+					if(!user){
+						return;
+					}
+					$.ajax({
+						type: "GET",
+			             url: "php/detail.php",
+			             data: {"userId":user.userId,"getAddressdata":"getAddressdata"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonAddressData = res.data;
+						},
+					});
+				},
 				GetQueryString(name){
 				     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
 				     var r = window.location.search.substr(1).match(reg);
@@ -219,6 +246,13 @@
 				},
 				// 确定下单
 				sure_order(){
+					if(!(this.form.address&&this.form.mobile&&this.form.userName)){
+						this.$message({
+							message: '请填写完整信息',
+							type: 'warning'
+						});
+						return;
+					}
 					this.dialog_order = false;
 					this.order();
 				},
@@ -230,7 +264,7 @@
 						$.ajax({
 							type: "GET",
 				             url: "php/detail.php",
-				             data: {"pid":that.pid,"userId":user.userId,"name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie},
+				             data: {"pid":that.pid,"userId":user.userId,"p_class":that.jsonData.p_class,"name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"p_color":that.radio_color,"p_version":that.radio_v},
 				             dataType: "json",
 							success: function(res) {
 								if(res.resultCode == 200){
@@ -269,15 +303,27 @@
 				        });
 					}
 				},
+				isOrder(){
+					if(window.sessionStorage.user){
+						window.location.href = "order.html"
+					}else{
+						this.$message({
+				          message: '请先登录',
+				          type: 'warning'
+				        });
+					}
+				},
+				
 				order(){
 					var that = this;
 					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
 					if(!!user){
 						var that = this;
+						var orderDate=this.formatDate(new Date()); 
 						$.ajax({
 							type: "GET",
 				             url: "php/detail.php",
-				             data: {"pid":that.pid,"userId":user.userId,"p_name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"my_address":that.form.address},
+				             data: {"pid":that.pid,"userId":user.userId,"p_class":that.jsonData.p_class,"p_name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"my_address":that.form.address,"user_name":that.form.userName,"user_mobile":that.form.mobile,"p_color":that.radio_color,"p_version":that.radio_v,"orderDate":orderDate,"orderCode":Date.parse(new Date())},
 				             dataType: "json",
 							success: function(res) {
 								if(res.resultCode == 200){
@@ -285,6 +331,8 @@
 							          message: '恭喜你，下单成功',
 							          type: 'success'
 							       });
+									// that.jiFen();
+									that.sales(that.pid);
 								}else if(res.resultCode == "00"){
 									that.$message({
 							          message: '请不要重复下单',
@@ -305,7 +353,76 @@
 				          type: 'warning'
 				        });
 					}
-				}
+				},
+				jiFen(){
+					var that = this;
+					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+					if(!user){
+						return;
+					}
+					$.ajax({
+							type: "GET",
+							url: "php/detail.php",
+							data: {"userId":user.userId,"addJifen":"addJifen"},
+							dataType: "json",
+							success: function(res) {
+								if(res.resultCode == 200){
+									if(window.sessionStorage.user){
+										user.jifen = res.data;
+										window.sessionStorage.user = JSON.stringify(user);
+									}
+									// that.$message({
+									// 		message: '积分增加成功',
+									// 		type: 'success'
+									// 	});
+								}
+							},
+							error:function(data){
+								
+							}
+						});
+				},
+				sales(productId){
+					$.ajax({
+							type: "GET",
+							url: "php/detail.php",
+							data: {"productId":productId,"addsales":"addsales"},
+							dataType: "json",
+							success: function(res) {
+								if(res.resultCode == 200){
+									console.log("销量增加成功")
+								}
+							},
+							error:function(data){
+								
+							}
+						});
+				},
+				formatDate(now) { 
+					var year=now.getFullYear(); 
+					var month=now.getMonth()+1; 
+					var date=now.getDate(); 
+					var hour=now.getHours(); 
+					var minute=now.getMinutes(); 
+					var second=now.getSeconds(); 
+					// return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second; 
+					return year+"-"+month+"-"+date+" "+hour+":"+minute; 
+				},
+				// 搜索
+				onsearchVal(){
+					var arg = encodeURI(encodeURI(this.searchVal));
+					window.location.href = "index_search.html?arg="+arg;
+					// var that = this;
+					// $.ajax({
+					// 	type: "GET",
+			    //          url: "php/index.php",
+			    //          data: {"searchVal":that.searchVal,"searchName":"searchName"},
+			    //          dataType: "json",
+					// 	success: function(res) {
+					// 		that.jsonData = res.data;
+					// 	},
+					// });
+				},
 			}
 		})
 	</script>
