@@ -29,22 +29,32 @@ if(!empty($_GET['userName']) && !empty($_GET['userPassword']) && empty($_GET['re
 //	登录
 login($conn);
 }
+///// 超级管理
+if(!empty($_GET['userId']) && !empty($_GET['searchSuper']) && $_GET['searchSuper'] == "searchSuper"){
+	//	sas 超级管理
+superInfo($conn);
+}
+if(!empty($_GET['userId']) && !empty($_GET['setSuper']) && $_GET['setSuper'] == "setSuper"){
+	//	sas 超级管理
+	superSet($conn);
+}
+
 if(!empty($_GET['userName']) && !empty($_GET['userPassword']) && !empty($_GET['registered'])){
 //	注册
 registered($conn);
 }
-// 修改昵称-用户名
+// 修改用户名
 if(!empty($_GET['userName']) && !empty($_GET['userId']) && !empty($_GET['changeName']) && $_GET['changeName'] == "changeName"){
 	
 changeName($conn);
 }
-// 修改昵称-用户名
+// 修改用户名
 if(!empty($_GET['password']) && !empty($_GET['userId']) && !empty($_GET['changePassword']) && $_GET['changePassword'] == "changePassword"){
 	
 	changePassword($conn);
 }
 // 新增收货地址
-if(!empty($_GET['userAddress']) && !empty($_GET['userId']) && !empty($_GET['addUserAddress']) && $_GET['addUserAddress'] == "addUserAddress"){
+if(!empty($_GET['userAddress']) && !empty($_GET['userPhone']) && !empty($_GET['getUserName']) && !empty($_GET['userId']) && !empty($_GET['addUserAddress']) && $_GET['addUserAddress'] == "addUserAddress"){
 	
 	addUserAddress($conn);
 }
@@ -193,7 +203,7 @@ function registered($conn){
 	    echo "Error: " . $sql . "<br>" . $conn->error;
 	}
 }
-//修改昵称
+//修改用户名
 function changeName($conn){
 
 	$sql = "SELECT * FROM user WHERE userName ='{$_GET['userName']}'";
@@ -212,7 +222,7 @@ function changeName($conn){
 	if ($conn->query($sql2) === TRUE) {
 	    echo json_encode(array(
             "resultCode"=>200,
-            "message"=>"修改昵称成功！",
+            "message"=>"修改用户名成功！",
             "data"=>[]
         ),JSON_UNESCAPED_UNICODE);
 
@@ -226,7 +236,7 @@ function changePassword($conn){
 	if ($conn->query($sql2) === TRUE) {
 	    echo json_encode(array(
             "resultCode"=>200,
-            "message"=>"修改昵称成功！",
+            "message"=>"修改用户名成功！",
             "data"=>[]
         ),JSON_UNESCAPED_UNICODE);
 
@@ -236,7 +246,22 @@ function changePassword($conn){
 }
 //新增收货地址
 function addUserAddress($conn){
-	$sql = "SELECT * FROM useraddress WHERE userAddress='{$_GET['userAddress']}'";
+	if($_GET['type'] == "change"){
+		$sql2 = "UPDATE useraddress SET userAddress='{$_GET['userAddress']}' , getUserName='{$_GET['getUserName']}' , userPhone='{$_GET['userPhone']}' WHERE dataid='{$_GET['dataid']}'"; 
+		$query = $conn->query($sql2); 
+		if ($conn->query($sql2) === TRUE) {
+			echo json_encode(array(
+				"resultCode"=>200,
+				"message"=>"修改地址成功！",
+				"data"=>[]
+			),JSON_UNESCAPED_UNICODE);
+
+		} else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+		}
+		return false;
+	}
+	$sql = "SELECT * FROM useraddress WHERE userAddress='{$_GET['userAddress']}' AND  getUserName='{$_GET['getUserName']}' AND  userPhone='{$_GET['userPhone']}' ";
 	$query = $conn->query($sql); 
 	$row = mysqli_fetch_assoc($query);
 	//echo $query?1:0; //php 无法输出布尔值
@@ -248,8 +273,8 @@ function addUserAddress($conn){
 	    ),JSON_UNESCAPED_UNICODE);
 	 	return false;
 	}
-	$sql = "INSERT INTO useraddress (userAddress,userId)
-	VALUES ('{$_GET['userAddress']}','{$_GET['userId']}')"; 
+	$sql = "INSERT INTO useraddress (userAddress,getUserName,userPhone,userId,dataid)
+	VALUES ('{$_GET['userAddress']}','{$_GET['getUserName']}','{$_GET['userPhone']}','{$_GET['userId']}','{$_GET['dataid']}')"; 
 	if ($conn->query($sql) === TRUE) {
 	    echo json_encode(array(
             "resultCode"=>200,
@@ -261,6 +286,36 @@ function addUserAddress($conn){
 	    echo "Error: " . $sql . "<br>" . $conn->error;
 	}
 }
+function superInfo($conn){
+	$sql = "SELECT * FROM user WHERE userId='admin'";
+	$result = $conn->query($sql);
+	$row = mysqli_fetch_assoc($result);
+	if (!$row){
+		echo json_encode(array(
+            "resultCode"=>'0000',
+            "message"=>"查询成功",
+            "data"=>$row
+        ),JSON_UNESCAPED_UNICODE);
+	}else{
+		echo json_encode(array(
+            "resultCode"=>'200',
+            "message"=>"查询成功",
+            "data"=>$row
+        ),JSON_UNESCAPED_UNICODE);
+	}
+}
+function superSet($conn){
+	$sql2 = "UPDATE user SET userName='{$_GET['userName']}', password='{$_GET['password']}' WHERE userId = 'admin'"; 
+	if ($conn->query($sql2) === TRUE) {
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"修改成功！",
+            "data"=>[]
+        ),JSON_UNESCAPED_UNICODE);
 
+	} else {
+	    echo "Error: " . $sql . "<br>" . $conn->error;
+	}
+}
 $conn->close();
 ?>

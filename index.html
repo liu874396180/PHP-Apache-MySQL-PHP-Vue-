@@ -86,7 +86,7 @@
 									</li>
 								<li id="honor" class="">
 									<a href="rycw.html" target="_blank">
-										<span>荣耀畅玩系列</span>
+										<span>华为畅享系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
@@ -132,7 +132,17 @@
 					<div class="swiper-pagination"></div>
 				</div>
 			</div>
-
+			<div class="box">
+				<span>公告：</span>
+				<div class="winBox">
+					<ul class="scroll">
+						
+						<li v-for="(item,index) in jsonggData" @click="toggDetail(item.g_title)">
+							<a href="#">&emsp;{{item.g_title}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<div class="show_list">
 				<div class="show_lists">
 					<a href="detail.html?id=f02b6799-1e3b-2f86-f"><img src="static/image/8x.png" /></a>
@@ -195,7 +205,7 @@
 								<span @click="orderBy('price')">价格从低到高</span>&emsp;|&emsp;<span @click="orderBy('sales')">销量从低到高</span>&emsp;|
 								<span @click="orderBy2('price')">价格从高到低</span>&emsp;|&emsp;<span @click="orderBy2('sales')">销量从高到低</span>
 						</div> -->
-						<div class="hotPro-right">
+						<!-- <div class="hotPro-right">
 							<span>公告：</span>
 							<div class="notice">
 								<ul>
@@ -204,7 +214,7 @@
 								</li>
 								</ul>
 								</div>
-						</div>
+						</div> -->
 				</div>
 				</div>
 				<div class="layout">
@@ -251,7 +261,7 @@
 			<div id="footer">
 				<div class="foot">
 					<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
-					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
+					<p class="">Designed and developed by chenwei huo.<br /> Copyright © 2010-2019 chenwei.com. All Rights Reserved.</p>
 					<p class=""></p>
 				</div>
 			</div>
@@ -262,16 +272,18 @@
 				    	<el-form :model="form">
 						    <el-form-item label="帐号" style="display: none;" :label-width="formLabelWidth">
 						      <el-input v-model="form.userName" autocomplete="off"></el-input>
-						    </el-form-item>
+								</el-form-item>
 						    <el-form-item label="密码" style="display: none;" :label-width="formLabelWidth">
 						      <el-input type="password" v-model="form.userPassword" autocomplete="off"></el-input>
 						    </el-form-item>
 						    <el-form-item label="帐号" :label-width="formLabelWidth">
-						      <el-input v-model="form.userName" autocomplete="off"></el-input>
-						    </el-form-item>
+						      <el-input v-model="form.userName" autocomplete="off" placeholder="请输入长度不超过18位的字符"></el-input>
+								</el-form-item>
+								<p v-show="form.userName.length > 18" style="margin-left: 19%;color: red;font-size: 12px;">*帐号不能超过18位字符</p>
 						    <el-form-item label="密码" :label-width="formLabelWidth">
-						      <el-input type="password" v-model="form.userPassword" autocomplete="off"></el-input>
-						    </el-form-item>
+						      <el-input type="password" v-model="form.userPassword" autocomplete="off" placeholder="请输入长度不超过18位的字符"></el-input>
+								</el-form-item>
+								<p v-show="form.userPassword.length > 18" style="margin-left: 19%;color: red;font-size: 12px;">*密码不能超过18位字符</p>
 						  </el-form>
 				    </el-tab-pane>
 				    <el-tab-pane label="注册" name="second">
@@ -283,14 +295,17 @@
 						      <el-input type="password" v-model="form.userPassword" autocomplete="off"></el-input>
 						    </el-form-item>
 						    <el-form-item label="帐号" :label-width="formLabelWidth">
-						      <el-input v-model="form.userName" autocomplete="off"></el-input>
-						    </el-form-item>
+						      <el-input v-model="form.userName" autocomplete="off" placeholder="请输入长度6-18位的字符"></el-input>
+								</el-form-item>
+								<p v-show="form.userName.length > 18 || form.userName.length < 6" style="margin-left: 19%;color: red;font-size: 12px;">*请输入长度6-18位的字符</p>
 						    <el-form-item label="密码" :label-width="formLabelWidth">
-						      <el-input type="password" v-model="form.userPassword" autocomplete="off"></el-input>
-						    </el-form-item>
-						    <el-form-item label="确认密码密码" :label-width="formLabelWidth">
-						      <el-input type="password" v-model="form.userPassword_2" autocomplete="off"></el-input>
-						    </el-form-item>
+						      <el-input type="password" v-model="form.userPassword" autocomplete="off" placeholder="请输入长度不超过18位的字符"></el-input>
+								</el-form-item>
+								<p v-show="form.userPassword.length > 18 || form.userPassword.length < 6" style="margin-left: 19%;color: red;font-size: 12px;">*请输入密码长度6-18位字符</p>
+						    <el-form-item label="确认密码" :label-width="formLabelWidth">
+						      <el-input type="password" v-model="form.userPassword_2" autocomplete="off" placeholder="请输入长度不超过18位的字符"></el-input>
+								</el-form-item>
+								<p v-show="form.userPassword_2.length > 18 || form.userPassword_2.length < 6" style="margin-left: 19%;color: red;font-size: 12px;">*密码不能超过18位字符</p>
 						  </el-form>
 				    </el-tab-pane>
 				    
@@ -298,14 +313,14 @@
 				
 			  
 			  <div slot="footer" class="dialog-footer">
-			    <el-button v-show="activeName=='second'" @click="registered">注册</el-button>
+			    <el-button v-show="activeName=='second'" :disabled="form.userName.length > 18 || form.userName.length < 6 || form.userPassword.length > 18 || form.userPassword.length < 6" @click="registered">注册</el-button>
 			    <el-button v-show="activeName=='first'" type="primary" @click="login">登录</el-button>
 			  </div>
 			  
 			</el-dialog>
 		</div>
 	</body>
-	<script>
+	<!-- <script>
 	/*
 	* 参数说明
 	* obj : 动画的节点，本例中是ul
@@ -325,6 +340,30 @@
 		// 调用 公告滚动函数
 		setInterval("noticeUp('.notice ul','-50px',500)", 2000);
 		});
+</script> -->
+<script type="text/javascript">
+	$(function() {
+			var num = 0;
+			function goLeft() {
+					//750是根据你给的尺寸，可变的
+					if (num == -450) {
+							num = 0;
+					}
+					num -= 1;
+					$(".scroll").css({
+							left: num
+					})
+			}
+			//设置滚动速度
+			var timer = setInterval(goLeft, 20);
+			//设置鼠标经过时滚动停止
+			$(".box").hover(function() {
+					clearInterval(timer);
+			},
+			function() {
+					timer = setInterval(goLeft, 20);
+			})
+	})
 </script>
 	<script type="text/javascript">
 		$(function() {

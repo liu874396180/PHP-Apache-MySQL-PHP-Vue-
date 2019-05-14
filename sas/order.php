@@ -2,38 +2,22 @@
 include '../config.php';
 
 //获取前端传值-----------------------------------------------------------------------------------
-//if( !empty($_GET['searchall']) ) $searchall = $_GET['searchall']; // 首页全部查询
-if( !empty($_GET['pid']) && !empty($_GET['dele'])) {
-        //delete
-        deleteP ($conn);
-}
-if( !empty($_GET['pid']) && !empty($_GET['change_p']) && $_GET['change_p'] == "change_p") {
-	//delete
-	changeP ($conn);
-}
-if( !empty($_GET['userId']) && !empty($_GET['deleteUser'])) {
-        //delete
-        deleteUser ($conn);
-}
+
 
 //逻辑调用-----------------------------------------------------------------------------------
-if( !empty($_GET['product'])) {
-	products ($conn);
+if( !empty($_GET['order']) && $_GET['order'] == "all") {
+	getAllOrder ($conn);
+}
+if( !empty($_GET['id']) && $_GET['deleteOrder'] == "deleteOrder") {
+	deleteOrder ($conn);
 }
 
-
-if( !empty($_GET['users'])) {
-	suer ($conn);
-}
-if( !empty($_GET['pid']) && !empty($_GET['add'])) {
-	add_products($conn);
-};
 //逻辑编写函数-----------------------------------------------------------------------------------
 
 
 //查询所有产品
-function products ($conn){
-	$sql = "SELECT * FROM productlist";
+function getAllOrder ($conn){
+	$sql = "SELECT * FROM my_order";
 	$result = $conn->query($sql);
 	$array = array();
 	if ($result->num_rows > 0) {
@@ -41,10 +25,35 @@ function products ($conn){
 	    while($row = $result->fetch_assoc()) {
 	    	$array[] = $row;
 	    }
-	    echo json_encode($array);
+	    echo json_encode(array(
+            "resultCode"=>200,
+            "message"=>"查询成功",
+            "data"=>$array
+        ),JSON_UNESCAPED_UNICODE);
 	} else {
 	    echo "0 结果";
 	}
+}
+ // 删除订单
+ function deleteOrder ($conn){
+    // mysqli_query($conn,"DELETE FROM car WHERE id='{$_GET['pid']}'");
+    $sql = "DELETE FROM my_order WHERE id='{$_GET['id']}'";
+    $result = $conn->query($sql);
+	echo json_encode(array(
+		"resultCode"=>200,
+		"message"=>"删除成功",
+		"data"=>[]
+	),JSON_UNESCAPED_UNICODE);
+    // $array = acrray();
+	// if ($result->num_rows >= 0) {
+	//     // 输出数据
+	//     while($row = $result->fetch_assoc()) {
+	//     	$array[] = $row;
+	//     }
+	//     echo json_encode($array);
+	// } else {
+	//     echo "0 结果";
+	// }
 }
 //查询所有用户
 function suer ($conn){
@@ -72,19 +81,6 @@ function add_products($conn){
         echo "Error: " . $sql . "<br>" . $conn->error;
     }	
 	
-}
-function changeP($conn){
-	$sql2 = "UPDATE productlist SET price='{$_GET['price']}',kucun='{$_GET['kucun']}',jianJie='{$_GET['jianJie']}' WHERE id = '{$_GET['pid']}'"; 
-	if ($conn->query($sql2) === TRUE) {
-	    echo json_encode(array(
-            "resultCode"=>200,
-            "message"=>"修改成功！",
-            "data"=>[]
-        ),JSON_UNESCAPED_UNICODE);
-
-	} else {
-	    echo "Error: " . $sql . "<br>" . $conn->error;
-	}
 }
 //删除产品
 function deleteP ($conn){

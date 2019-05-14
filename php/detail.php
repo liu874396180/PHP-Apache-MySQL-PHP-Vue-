@@ -60,54 +60,67 @@ function products ($conn){
 	}
 }
 
-//添加购物车
+//添加购物车 ----禁止重复添加
+// function addCar($conn){
+// 	 $sql = "SELECT * FROM car WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+// 	 $result = $conn->query($sql);
+// 	 $row = mysqli_fetch_assoc($result);
+// 	 if($row == TRUE){
+// 	 	echo json_encode(array(
+//          "resultCode"=>"00",
+//          "message"=>"重复添加",
+//          "data"=>[]
+//      ),JSON_UNESCAPED_UNICODE);
+
+// 	 	return false;
+// 	 }else{
+// 		$sql = "INSERT INTO car (userId, id,name,price,jianJie,img,p_class,p_color,p_version)
+// 		VALUES ('{$_GET['userId']}', '{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}','{$_GET['p_class']}','{$_GET['p_color']}','{$_GET['p_version']}')";
+		   
+// 		if ($conn->query($sql) === TRUE) {
+// 		    echo json_encode(array(
+// 	            "resultCode"=>200,
+// 	            "message"=>"添加成功",
+// 	            "data"=>[]
+// 	        ),JSON_UNESCAPED_UNICODE);
+// 		} else {
+// 		    echo "Error: " . $sql . "<br>" . $conn->error;
+// 		}
+// 	 }
+// }
+//添加购物车 ----可以重复添加。数量累积
 function addCar($conn){
-	// $sql="SELECT * FROM car WHERE id='{$_GET['pid']}'";
-	//$sql="SELECT * FROM car WHERE id=555";
-	//$rst = mysql_query($sql);
-	// $row = mysql_num_rows($sql);
-	// $arr = mysql_fetch_assoc($sql);
-	//echo $rst ;
-	// if($rst == false){
-	// 	// echo "添加成功";
-	// 	$sql = "INSERT INTO car (userId, id,name,price,jianJie,img)
-	// 	VALUES ('{$_GET['userId']}', '{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}')";  
-	// 	if ($conn->query($sql) === TRUE) {
-	// 	    echo "添加成功";
-	// 	} else {
-	// 	    echo "Error: " . $sql . "<br>" . $conn->error;
-	// 	}
-	// }else{
-	// 	echo "购物车已存在";
-	// }
-	 $sql = "SELECT * FROM car WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+	$sql = "SELECT * FROM car WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
 	 $result = $conn->query($sql);
 	 $row = mysqli_fetch_assoc($result);
 	 if($row == TRUE){
-	// if($conn->query($sql) == TRUE){
-	 	echo json_encode(array(
-         "resultCode"=>"00",
-         "message"=>"重复添加",
-         "data"=>[]
-     ),JSON_UNESCAPED_UNICODE);
-
+		$sql2 = "SELECT * FROM car WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+		$result2 = $conn->query($sql2);
+		$row2 = mysqli_fetch_assoc($result2);
+		$old_num = array_values($row2)[9]; //查询原有数量
+		$new_num = $old_num + 1; //每次增加1
+		$sql3 = "UPDATE car SET p_num=$new_num WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
+		$result = $conn->query($sql3);
+		echo json_encode(array(
+			"resultCode"=>200,
+			"message"=>"数量增加成功",
+			"data"=>[]
+		),JSON_UNESCAPED_UNICODE);
 	 	return false;
 	 }else{
-		$sql = "INSERT INTO car (userId, id,name,price,jianJie,img,p_class,p_color,p_version)
-		VALUES ('{$_GET['userId']}', '{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}','{$_GET['p_class']}','{$_GET['p_color']}','{$_GET['p_version']}')";
-		   
-		if ($conn->query($sql) === TRUE) {
-		    echo json_encode(array(
-	            "resultCode"=>200,
-	            "message"=>"添加成功",
-	            "data"=>[]
-	        ),JSON_UNESCAPED_UNICODE);
+		$sql4 = "INSERT INTO car (userId, id,name,price,jianJie,img,p_class,p_color,p_version,p_num)
+		VALUES ('{$_GET['userId']}', '{$_GET['pid']}','{$_GET['name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['img']}','{$_GET['p_class']}','{$_GET['p_color']}','{$_GET['p_version']}',1)";
+		if ($conn->query($sql4) === TRUE) {
+			echo json_encode(array(
+				"resultCode"=>200,
+				"message"=>"添加成功",
+				"data"=>[]
+			),JSON_UNESCAPED_UNICODE);
 		} else {
-		    echo "Error: " . $sql . "<br>" . $conn->error;
+			echo "Error: " . $sql4 . "<br>" . $conn->error;
 		}
 	 }
 }
-
 //添加订单
 function addOrder($conn){
 	$sql = "SELECT * FROM my_order WHERE id='{$_GET['pid']}' AND userId = '{$_GET['userId']}'";
@@ -121,8 +134,15 @@ function addOrder($conn){
 		),JSON_UNESCAPED_UNICODE);
 		return false;
 	}else{
-		$sql = "INSERT INTO my_order (userId,id,p_name,price,jianJie,my_address,img,p_class,user_name,user_mobile,p_color,p_version,orderDate,orderCode)
-		VALUES ('{$_GET['userId']}','{$_GET['pid']}','{$_GET['p_name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['my_address']}','{$_GET['img']}','{$_GET['p_class']}','{$_GET['user_name']}','{$_GET['user_mobile']}','{$_GET['p_color']}','{$_GET['p_version']}','{$_GET['orderDate']}','{$_GET['orderCode']}')";
+		$psql = "SELECT * FROM productlist WHERE id='{$_GET['pid']}'";
+		$presult = $conn->query($psql);
+		$prow = mysqli_fetch_assoc($presult);
+		$pold_kucun = array_values($prow)[8]; //查询原有kc
+		$pnew_kucun =  --$pold_kucun; //每次-1
+		$psql2 = "UPDATE productlist SET kucun=$pnew_kucun WHERE id='{$_GET['pid']}'";
+		$presult2 = $conn->query($psql2);
+		$sql = "INSERT INTO my_order (userId,id,p_name,price,jianJie,my_address,img,p_class,user_name,user_mobile,p_color,p_version,orderDate,orderCode,shifu,userName)
+		VALUES ('{$_GET['userId']}','{$_GET['pid']}','{$_GET['p_name']}','{$_GET['price']}','{$_GET['jianJie']}','{$_GET['my_address']}','{$_GET['img']}','{$_GET['p_class']}','{$_GET['user_name']}','{$_GET['user_mobile']}','{$_GET['p_color']}','{$_GET['p_version']}','{$_GET['orderDate']}','{$_GET['orderCode']}','{$_GET['shifu']}','{$_GET['userName']}')";
 			
 		if ($conn->query($sql) === TRUE) {
 			echo json_encode(array(

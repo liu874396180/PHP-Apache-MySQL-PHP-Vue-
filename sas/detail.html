@@ -39,11 +39,13 @@
 			<div class="left">
 				<div class="bigTitle">华为手机后台管理系统</div>
 				<div class="lines">
-					<div @click="flag = 2" :class="{active:flag == 2}"><img src="img/icon-2.png" />产品列表</div>
+					<div @click="flag = 2" :class="{active:flag == 2}"><img src="img/icon-2.png" />产品管理</div>
 					<div @click="flag = 1" :class="{active:flag == 1}"><img src="img/addpr.png" />添加产品</div>
 					<div @click="gatUserData" :class="{active:flag == 3}"><img src="img/icon-1.png" />用户管理</div>
 					<div @click="gatggData" :class="{active:flag == 4}"><img src="img/gonggao.png" />公告管理</div>
 					<div @click="flag = 5" :class="{active:flag == 5}"><img src="img/addpr.png" />新增公告</div>
+					<div @click="gatOrderData" :class="{active:flag == 6}"><img src="img/icon-5.png" />订单管理</div>
+					<div @click="gatSuperData" :class="{active:flag == 7}"><img src="img/icon-1.png" />管理员管理</div>
 					<!-- <div onclick="pageClick(this)"><img src="img/icon-3.png" />个人信息管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-4.png" />收货地址管理</div>
 					<div onclick="pageClick(this)"><img src="img/icon-5.png" />在售门店管理</div> -->
@@ -51,24 +53,28 @@
 			</div>
 			<div class="top">
 				<div v-if="flag==1" class="leftTiyle" id="flTitle">添加产品</div>
-				<div v-if="flag==2" class="leftTiyle">产品列表</div>
+				<div v-if="flag==2" class="leftTiyle">产品管理</div>
 				<div v-if="flag==3" class="leftTiyle">用户管理</div>
 				<div v-if="flag==4" class="leftTiyle">公告管理</div>
-				<div v-if="flag==5" class="leftTiyle">新增公共</div>
-				<div class="thisUser">当前用户：超级管理员</div>
+				<div v-if="flag==5" class="leftTiyle">新增公告</div>
+				<div v-if="flag==6" class="leftTiyle">订单管理</div>
+				<div v-if="flag==7" class="leftTiyle">管理员管理</div>
+				<div class="thisUser" @click="gatSuperData" style="cursor: pointer;">当前用户：超级管理员<a style="display: inline-block;cursor: pointer;margin-left: 50px;" href="index.html">退出</a></div>
 			</div>
 			<div v-if="flag==1" class="content">
 					产品名称 :&emsp;<el-input v-model="p_name" placeholder="请输入产品名称"></el-input> &emsp;&emsp;
 					产品价格 :&emsp;<el-input v-model="p_price" placeholder="请输入产品价格"></el-input><br>
 					产品简介 :&emsp;<el-input type="textarea" :rows="2" placeholder="请输入简介" v-model="p_info"></el-input>
+					产品功能 :&emsp;<el-input type="textarea" :rows="2" placeholder="请输入主要功能:图片格式为：《img src='static/gnImage/201812101528044939784.jpg'》" v-model="p_gn"></el-input>
 					产品型号 :&emsp;<el-select v-model="p_class" placeholder="请选择">
 						<el-option label="荣耀" value="10"></el-option>
 						<el-option label="HUAWEI P系列" value="20"></el-option>
-						<el-option label="荣耀畅玩系列" value="30"></el-option>
+						<el-option label="华为畅享系列" value="30"></el-option>
 						<el-option label="HUAWEI Mate系列" value="40"></el-option>
 						<el-option label="HUAWEI nova系列" value="50"></el-option>
 						<!-- <el-option label="华为畅享系列" value="60"></el-option> -->
-					</el-select>
+					</el-select>&emsp;&emsp;
+					产品库存 :&emsp;<el-input v-model="kucun" type="number" min="1" placeholder="请输入数字"></el-input>
 					<el-upload
 					class="upload-demo"
 					action="upload.php"
@@ -102,6 +108,10 @@
 						label="价格">
 					</el-table-column>
 					<el-table-column
+						prop="kucun"
+						label="库存">
+					</el-table-column>
+					<el-table-column
 						prop="jianJie"
 						label="简介">
 					</el-table-column>
@@ -109,6 +119,7 @@
 						label="操作"
 						width="180">
 						<template slot-scope="scope">
+							<a href="javascript:void(0)" style="color:#1989fa" @click="change_p(scope.row)">修改</a>
 							<a href="javascript:void(0)" style="color:#1989fa" @click="delet_p(scope.row.id)">删除</a>
 						</template>
 					</el-table-column>
@@ -160,7 +171,8 @@
 						label="操作"
 						width="180">
 						<template slot-scope="scope">
-							<a href="javascript:void(0)" @click="deletgg(scope.row.g_title)">删除</a>
+							<a href="javascript:void(0)" style="color: rgb(25, 137, 250);" @click="changegg(scope.row)">修改</a>
+							<a href="javascript:void(0)" style="color: rgb(25, 137, 250);" @click="deletgg(scope.row.g_title)">删除</a>
 						</template>
 					</el-table-column>
 					</el-table>
@@ -171,6 +183,97 @@
 					公告简介 :&emsp;<el-input type="textarea" :rows="2" placeholder="公告详情" v-model="g_detail"></el-input>
 					<el-button type="primary" style="width: 50%;margin-top: 50px;" @click="save_gg">保存</el-button>
 			</div>
+			<!-- 订单管理 -->
+			<div v-if="flag==6" key="3" class="content">
+				<el-table
+				height="450"
+				:data="jsonOrderData"
+				style="width: 100%">
+				<el-table-column
+					prop="userName"
+					label="用户名"
+				>
+				</el-table-column>
+				<el-table-column
+					prop="p_name"
+					label="手机名称"
+					width="">
+				</el-table-column>
+				<el-table-column
+					prop="shifu"
+					label="实付">
+				</el-table-column>
+				<el-table-column
+					prop="jianJie"
+					label="简介">
+				</el-table-column>
+				<el-table-column
+					prop="p_version"
+					label="版本">
+				</el-table-column>
+				<el-table-column
+					prop="orderDate"
+					label="下单时间">
+				</el-table-column>
+				<el-table-column
+					prop="orderCode"
+					label="订单编号">
+				</el-table-column>
+				<el-table-column
+					label="操作"
+					width="180">
+					<template slot-scope="scope">
+						<a href="javascript:void(0)" style="color:#1989fa" @click="deletOrder(scope.row.id)">删除</a>
+					</template>
+				</el-table-column>
+				</el-table>
+			</div>
+			<!-- 管理员 -->
+			<div v-if="flag==7" key="4" class="content">
+				超级管理 :&emsp;<el-input v-model="jsonSuperData.userName"></el-input> &emsp;&emsp;
+				管理密码 :&emsp;<el-input v-model="jsonSuperData.password"></el-input>
+				<el-button type="primary" style="width: 50%;margin-top: 50px;" @click="saveSuper">保存</el-button>
+			</div>
+			<el-dialog
+				title="修改产品"
+				:visible.sync="dialog_order"
+				width="30%"
+				>
+				<el-form>
+					<el-form-item label="价格" :label-width="formLabelWidth">
+					  <el-input v-model="change_price" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="库存" :label-width="formLabelWidth">
+					  <el-input v-model="change_kuncun" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="简介" :label-width="formLabelWidth">
+							<el-input v-model="change_jianjie" autocomplete="off"></el-input>
+						  </el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialog_order = false">取 消</el-button>
+					<el-button type="primary" @click="sureChangOrder">确 定</el-button>
+				</span>
+			</el-dialog>
+			<el-dialog
+				title="修改公告"
+				:visible.sync="dialog_gg"
+				width="30%"
+				>
+				<el-form>
+					<el-form-item label="标题" >
+					  <el-input v-model="g_title" autocomplete="off"></el-input>
+					</el-form-item>
+					<el-form-item label="内容" >
+						<el-input :rows="5" type="textarea" v-model="g_detail" autocomplete="off"></el-input>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialog_gg = false">取 消</el-button>
+					<el-button type="primary" @click="sureChanggg">确 定</el-button>
+				</span>
+			</el-dialog>
+			
 		</div>
 	</body>
 	<script>
@@ -182,20 +285,32 @@
 		var WEITUOSERVER = new Vue({
 			el: '#sas_app',
 			data: {
+				dialog_gg:false,
+				jsonSuperData:{},
+				formLabelWidth:"120px",
+				change_price:"",
+				change_kuncun:"",
+				change_jianjie:"",
+				change_pid:"",
+				dialog_order:false,
 				jsonData: [],
 				jsonUserData:[],
+				jsonOrderData:[],
 				jsonggData:[], // 公告列表
 				dialogTableVisible: false,
         		dialogFormVisible: false,
         		p_name:"",
 				p_price:"",
 				p_info:"",
+				p_gn:"",
 				p_class:"", // 型号
+				kucun:"",
 				fileList:[],
 				flile_upload_name:"",
 				flag:2,
 				g_title:"",  // 公告名称
-				g_detail:""   // 公告详情
+				g_detail:"",   // 公告详情
+				g_old_title:""
 			},
 			created() {
 				this.gatData();
@@ -210,11 +325,11 @@
 				// 存储主页产品
 				save(){
 					var that = this;
-					if(that.p_name&&that.p_price&&that.flile_upload_name&&that.p_info&&that.p_class){
+					if(that.p_name&&that.p_price&&that.flile_upload_name&&that.p_info&&that.p_gn&&that.p_class&&that.kucun){
 						$.ajax({
 						type: "GET",
 			             url: "product.php",
-			             data: {"pid":that.uuid(),"name":that.p_name,"price":that.p_price,"img":that.flile_upload_name,"jianJie":that.p_info,"p_class":that.p_class,"add":"add"},
+			             data: {"pid":that.uuid(),"name":that.p_name,"price":that.p_price,"img":that.flile_upload_name,"jianJie":that.p_info,"p_class":that.p_class,"p_gn":that.p_gn,"kucun":that.kucun,"add":"add"},
 			             dataType: "json",
 						success: function(data) {
 							that.$message({
@@ -277,6 +392,23 @@
 						}
 					});
 				},
+				// 获取订单列表
+				gatOrderData() {
+					var that = this;
+					this.flag = 6;
+					$.ajax({
+						type: "GET",
+			             url: "order.php",
+			             data: {"order":"all"},
+			             dataType: "json",
+						success: function(data) {
+							that.jsonOrderData = data.data;
+						},
+						error:function(data){
+							that.jsonOrderData = data.data;
+						}
+					});
+				},
 				// 新增公告
 				save_gg(){
 					var that = this;
@@ -284,13 +416,15 @@
 						$.ajax({
 						type: "GET",
 			             url: "gg.php",
-			             data: {"g_title":that.g_title,"g_detail":that.g_detail,"add":"add"},
+			             data: {"g_title":that.g_title,"g_detail":that.g_detail,"g_id":that.uuid(),"add":"add"},
 			             dataType: "json",
 						success: function(data) {
 							that.$message({
 								message: "保存成功",
 								type: 'success'
 							});
+							that.g_detail = "";
+							that.g_title = "";
 							setTimeout(()=>{window.location.reload();},200)
 						},
 						error:function(data){
@@ -299,6 +433,8 @@
 								message: "保存成功",
 								type: 'success'
 							});
+							that.g_detail = "";
+							that.g_title = "";
 							setTimeout(()=>{window.location.reload();},200)
 							
 							}
@@ -380,6 +516,114 @@
 						}
 					});
 				},
+				// 删除订单
+				deletOrder(id){
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "order.php",
+			             data: {"id":id,"deleteOrder":"deleteOrder"},
+			             dataType: "json",
+						success: function(data) {
+							that.gatOrderData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.gatUserData();
+							that.$message({
+								message: "删除成功",
+								type: 'success'
+							});
+							
+						}
+					});
+				},
+				change_p(row){
+					var that = this;
+					that.dialog_order = true;
+					that.change_price = row.price;
+					that.change_kuncun = row.kucun;
+					that.change_jianjie = row.jianJie;
+					that.change_pid = row.id;
+				},
+				sureChangOrder(){
+					var that = this;
+					if(!that.change_price || !that.change_kuncun || !that.change_jianjie){that.$message({
+								message: "请填写完整",
+								type: 'warning'
+							});}
+					$.ajax({
+						type: "GET",
+			             url: "product.php",
+			             data: {"pid":that.change_pid,"price":that.change_price,"kucun":that.change_kuncun,"jianJie":that.change_jianjie,"change_p":"change_p"},
+			             dataType: "json",
+						success: function(data) {
+							that.gatData();
+							that.$message({
+								message: "修改成功",
+								type: 'success'
+							});
+							that.dialog_order = false;
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.gatUserData();
+							that.$message({
+								message: "修改失败",
+								type: 'warning'
+							});
+							
+						}
+					});
+				},
+				// 修改公告
+				changegg(row){
+					var that = this;
+					that.dialog_gg = true;
+					that.g_title = row.g_title;
+					that.g_detail = row.g_detail;
+					that.g_old_title = row.g_title;
+				},
+				sureChanggg(){
+					var that = this;
+					if(!that.g_detail || !that.g_title){
+						that.$message({
+							message: "请填写完整",
+							type: 'warning'
+						});
+						return;
+					}
+					$.ajax({
+						type: "GET",
+			             url: "gg.php",
+			             data: {"g_title":that.g_title,"g_detail":that.g_detail,"change_gg":"change_gg","g_old_title":that.g_old_title},
+			             dataType: "json",
+						success: function(data) {
+							that.gatggData();
+							that.$message({
+								message: "修改成功",
+								type: 'success'
+							});
+							that.dialog_gg = false;
+							that.g_title = "";
+							that.g_detail = "";
+							that.g_old_title = "";
+						},
+						error:function(data){
+							console.log(data.responseText)
+							that.gatUserData();
+							that.$message({
+								message: "修改失败",
+								type: 'warning'
+							});
+							
+						}
+					});
+				},
 				// 删除公告
 				deletgg(g_title){
 					var that = this;
@@ -399,6 +643,42 @@
 						}
 					});
 				},
+				gatSuperData(){
+					this.flag = 7;
+					var that = this;
+					$.ajax({
+						type: "GET",
+			             url: "../php/index.php",
+			             data: {"userId":"admin","searchSuper":"searchSuper"},
+			             dataType: "json",
+						success: function(res) {
+							that.jsonSuperData =res.data;
+						},
+						error:function(data){
+							// that.jsonUserData = data;
+						}
+					});
+				},
+				saveSuper(){
+					var that = this;
+					if(!that.jsonSuperData.userName || !that.jsonSuperData.password){
+						alert("请填写完整")
+						return;
+					}
+					$.ajax({
+						type: "GET",
+			             url: "../php/index.php",
+			             data: {"userId":"admin","userName":that.jsonSuperData.userName,"password":that.jsonSuperData.password,"setSuper":"setSuper"},
+			             dataType: "json",
+						success: function(res) {
+							alert("保存成功")
+							window.location.href = "index.html";
+						},
+						error:function(data){
+							// that.jsonUserData = data;
+						}
+					});
+				}
 			}
 		})
 	</script>

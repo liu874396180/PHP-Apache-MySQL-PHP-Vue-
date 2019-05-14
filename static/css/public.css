@@ -170,10 +170,59 @@ ol, ul {
 
 /*banner*/
 #banner{
-    height: 451px
+    height: 383px;
 }
 #banner .swiper-slide img{
 	width: 100%;
+}
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{
+    bottom: 30px !important;
+}
+
+/* 公告2 */
+.box .winBox li {
+    list-style:none;
+}
+.box .winBox a {
+    text-decoration:none;
+}
+.box .winBox img {
+    border:none;
+}
+.box {
+    padding-left:27px;
+    background:url("images/xtb.png") no-repeat;
+    margin-top:20px;
+    margin-left:100px;
+}
+.box .winBox {
+    width:1100px;
+    height:40px;
+    overflow:hidden;
+    position:relative;
+    border: 1px solid #ccc;
+    display: inline-block;
+    vertical-align: middle;
+}
+.box .winBox .scroll {
+    /*width的大小是根据下面li的长度和多少个li而定的，需注意！*/
+    width:1500px;
+    position:absolute;
+    left:0px;
+    top:0px;
+}
+.box .winBox .scroll li {
+    width:300px;
+    float:left;
+    line-height:40px;
+    text-align:left;
+    background: url("../image/li-icon6.gif");
+    background-repeat: no-repeat;
+    background-position: 0px center;
+    font-size: 12px;
+}
+.box .winBox .scroll li a,a:link,a:visited,a:hover,a:active{
+    color: black;
 }
 /*静态展示列表*/
 .show_list{
@@ -322,6 +371,9 @@ ol, ul {
 .slogan .s4 i{
 	background-position: -47px -151px;
 }
+#phoneDetail img{
+    width: 100%;
+}
 /*底部版权*/
 #footer{
 	border-top: 1px solid #EEE;
@@ -368,7 +420,10 @@ ol, ul {
     padding-bottom: 3px;
     padding-left: 10px;
 }
-
+.phone-detail{
+    width: 1200px;
+    margin: 0 auto 100px;
+}
 
 
 /*购物车*/
@@ -396,7 +451,9 @@ ol, ul {
 .el-dialog--center .el-tabs__header{
 	padding: 0 0 0 81px;
 }
-
+.el-form-item{
+    margin-bottom: 13px;
+}
 /* 热门问题 */
 #login-body{
     

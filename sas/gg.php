@@ -15,8 +15,11 @@ if( !empty($_GET['ggallList'])) {
 if( !empty($_GET['checkone']) && !empty($_GET['g_title'])) {
 	ggDetail ($conn);
 }
-if( !empty($_GET['g_title']) && !empty($_GET['g_detail'])) {
+if( !empty($_GET['g_title']) && !empty($_GET['g_detail']) && !empty($_GET['add']) && $_GET['add'] == "add") {
 	addgg($conn);
+};
+if( !empty($_GET['change_gg']) && !empty($_GET['change_gg'])) {
+	changegg($conn);
 };
 //逻辑编写函数-----------------------------------------------------------------------------------
 
@@ -54,8 +57,8 @@ function ggDetail ($conn){
 
 //添加公告
 function addgg($conn){
-    $sql = "INSERT INTO gonggao (g_title,g_detail)
-    VALUES ('{$_GET['g_title']}','{$_GET['g_detail']}')";
+    $sql = "INSERT INTO gonggao (g_title,g_detail,g_id)
+    VALUES ('{$_GET['g_title']}','{$_GET['g_detail']}','{$_GET['g_id']}')";
         
     if ($conn->query($sql) === TRUE) {
         echo json_encode(array(
@@ -84,6 +87,15 @@ function addgg($conn){
 		echo "Error: " . $sql . "<br>" . $conn->error;
 	}
     
+}
+function changegg($conn){
+	$sql2 = "UPDATE gonggao SET g_title = '{$_GET['g_title']}',g_detail = '{$_GET['g_detail']}' WHERE g_title = '{$_GET['g_old_title']}'";
+	$result = $conn->query($sql2);
+	echo json_encode(array(
+		"resultCode"=>200,
+		"message"=>"修改成功",
+		"data"=>[]
+	),JSON_UNESCAPED_UNICODE);
 }
 $conn->close();
 ?>

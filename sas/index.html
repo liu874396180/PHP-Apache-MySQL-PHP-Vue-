@@ -65,7 +65,7 @@ input {
 input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2); }
 
 </style>
-
+<script src="../static/js/jquery-3.1.1.min.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 
@@ -96,13 +96,40 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 		var unanm = document.getElementById("unanm");
 		var pas = document.getElementById("pas");
 		login.onclick = function(){
-			if((unanm.value=="hcw"||unanm.value=="HCW")&&pas.value==123456){
-				window.location.href = 'detail.html';
-			}else{
-				alert("账户或密码有误")
+			// if((unanm.value=="hcw"||unanm.value=="HCW")&&pas.value==123456){
+			// 	window.location.href = 'detail.html';
+			// }else{
+			// 	alert("账户或密码有误")
+			// }
+			loginsys();
+		}
+		document.onkeydown = function(e){
+			var ev = document.all ? window.event : e;
+			if(ev.keyCode==13) {
+				login.click();
 			}
-		
+		}
 	}
-}
+	function loginsys() {
+		if(unanm.value && pas.value){
+			$.ajax({
+				type: "get",
+					url: "../php/index.php",
+					data: {"userName":unanm.value,"userPassword":pas.value},
+					dataType: "json",
+				success: function(res) {
+					if(res.resultCode == 0000){
+						alert("登录失败：账户或密码有误")
+					}else{
+						window.location.href = 'detail.html';
+					}
+				},
+				error:function(data){
+				}
+			});
+		}else{
+			alert('账户或密码不能为空')
+		}
+	}
 </script>
 </html>

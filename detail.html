@@ -84,7 +84,7 @@
 									</li>
 								<li id="honor" class="">
 									<a href="rycw.html" target="_blank">
-										<span>荣耀畅玩系列</span>
+										<span>华为畅享系列</span>
 									</a>
 								</li>
 								<li id="honor" class="">
@@ -135,22 +135,37 @@
 						    <el-radio v-model="radio_color" label="宝石蓝" border>宝石蓝</el-radio>
 						    <el-radio v-model="radio_color" label="香槟金" border>香槟金</el-radio>
 						    <el-radio v-model="radio_color" label="幻影紫" border>幻影紫</el-radio>
-						    <el-radio v-model="radio_color" label="海鸥灰" border>海鸥灰</el-radio>
-						    <el-radio v-model="radio_color" label="铃兰白" border>铃兰白</el-radio>
+						    <!-- <el-radio v-model="radio_color" label="海鸥灰" border>海鸥灰</el-radio>
+						    <el-radio v-model="radio_color" label="铃兰白" border>铃兰白</el-radio> -->
 						</div>
 						<div class="" style="margin-top: 10px;">
 							选择版本: &emsp;
 						    <el-radio v-model="radio_v" label="全网通6GB+64GB" border>全网通6GB+64GB</el-radio>
-						    <el-radio v-model="radio_v" label="全网通6GB+128GB" border>全网通6GB+128GB</el-radio>
+						    <!-- <el-radio v-model="radio_v" label="全网通6GB+128GB" border>全网通6GB+128GB</el-radio> -->
 						</div>
+						<p>库存：{{jsonData.kucun}}</p>
 						<div class=""style="margin-top: 10px;">
 							<el-row>
-							  <el-button style="width: 25%;" @click="addCar">加入购物车</el-button>
-							  <el-button type="danger" style="width: 25%;" @click="dialog_order = true">立即下单</el-button>
+							  <el-button :disabled="jsonData.kucun < 1" style="width: 25%;" @click="addCar">加入购物车</el-button>
+							  <el-button :disabled="jsonData.kucun < 1" type="danger" style="width: 25%;" @click="dialog_order = true">立即下单</el-button>
 							</el-row>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="phone-detail">
+				<el-tabs v-model="activeName" @tab-click="handleClick">
+					<el-tab-pane label="手机详情" name="first">
+						<div id="phoneDetail" v-html="jsonData.p_gn"></div>
+					</el-tab-pane>
+					<el-tab-pane label="用户评价" name="second">
+						<el-input	type="textarea" :rows="2" placeholder="请输入内容" v-model="phonePj"></el-input>
+						<div style="margin: 20px 0; text-align: right"><el-button type="primary" @click="savePingJia">评论</el-button></div>
+						<ul>
+							<li v-for="(item, index) in pingJiaData" :key="index"><span style="color:#409EFF;font-size: 16px">{{item.userName}}：</span> <span style="color:#666;font-size: 16px">{{item.pingJiaText}}</span> -------- <span style="color:#666;font-size: 12px">{{item.pingJiaDate}}</span> <span style="color: rgb(64, 158, 255);;cursor: pointer;" @click="delePingJia(item.p_id)" v-if="userInfo &&item.userName == userInfo.userName">删除</span></li>
+						</ul>
+					</el-tab-pane>
+				</el-tabs>
 			</div>
 			<!-- 地址弹窗 -->
 			<el-dialog
@@ -161,9 +176,10 @@
 				<el-form :model="form">
 					<el-form-item label="收货地址" :label-width="form.formLabelWidth">
 						<!-- <el-input v-model="form.address" autocomplete="off"></el-input> -->
-						<el-select v-model="form.address" placeholder="请选择">
-								<el-option v-for="item in jsonAddressData" :key="item.userAddress" :label="item.userAddress" :value="item.userAddress"></el-option>
-							</el-select>
+						<el-select v-if="jsonAddressData.length" v-model="form.address" placeholder="请选择">
+							<el-option v-for="item in jsonAddressData" :key="item.userAddress" :label="item.userAddress" :value="item.userAddress"></el-option>
+						</el-select>
+						<el-input v-else v-model="form.address" autocomplete="off"></el-input>
 					</el-form-item>
 					<el-form-item label="收货人" :label-width="form.formLabelWidth">
 					  <el-input v-model="form.userName" autocomplete="off"></el-input>
@@ -174,6 +190,22 @@
 				</el-form>
 				<span slot="footer" class="dialog-footer">
 					<el-button @click="dialog_order = false">取 消</el-button>
+					<el-button type="primary" @click="dialogVisibleOrder = true;dialog_order = false">确 定</el-button>
+				</span>
+			</el-dialog>
+			<el-dialog
+				title="确认下单"
+				:visible.sync="dialogVisibleOrder"
+				width="30%"
+				>
+				<p>{{jsonData.name}} ({{jsonData.jianJie}})</p>
+				<p>单价： {{jsonData.price}} ({{radio_color}}--{{radio_v}})</p>
+				<p>收货地址: {{form.address}}</p>
+				<p>收货人: {{form.userName}}</p>
+				<p>手机号: {{form.mobile}}</p>
+				<p style="color:red">实付: ￥{{jsonData.price}}</p>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialogVisibleOrder = false">取 消</el-button>
 					<el-button type="primary" @click="sure_order">确 定</el-button>
 				</span>
 			</el-dialog>
@@ -181,7 +213,7 @@
 			<div id="footer">
 				<div class="foot">
 					<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
-					<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号 增值电信业务经营许可证：苏B2-20130048号</p>
+					<p class="">Designed and developed by chenwei huo.<br /> Copyright © 2010-2019 chenwei.com. All Rights Reserved.</p>
 					<p class=""></p>
 				</div>
 			</div>
@@ -193,10 +225,15 @@
 		var WEITUOSERVER = new Vue({
 			el: '#pdetail',
 			data: {
+				activeName: 'first',
+				dialogVisibleOrder:false,
+				phonePj:"",
+				pingJiaData:[],
 				jsonData: {},
 				dialog_order:false, //下单弹窗
 				searchVal:"", // 搜索
 				jsonAddressData:[],
+				jsonuserAddressData:[],
 				form:{address:"河南省郑州市二七区",formLabelWidth:"120px",userName:"",mobile:""},
 				dialogTableVisible: false,
         		dialogFormVisible: false,
@@ -209,8 +246,95 @@
 				this.pid = this.GetQueryString("id");
 				this.gatData();
 				this.gatAddressData();
+				this.getPingJia();
 			},
 			methods: {
+				handleClick(tab, event) {
+							// console.log(tab, event);
+					},
+				savePingJia(){
+					var that = this;
+						var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+						if(!user){
+							that.$message({
+								message: '请先登录',
+								type: 'warning'
+							});
+								return;
+						}
+						$.ajax({
+								type: "GET",
+										url: "php/pingJia.php",
+										data: {"userName":that.userInfo.userName,"pingJiaText":that.phonePj,"pingJiaDate":new Date(),"productId":that.pid,"add":"add","p_id":that.uuid()},
+										dataType: "json",
+								success: function(res) {
+									that.$message({
+										message: '评论成功',
+										type: 'success'
+									});
+									that.phonePj = "";
+									that.getPingJia();
+								},
+						});
+				},
+				delePingJia(id){
+					debugger
+					var that = this;
+					$.ajax({
+								type: "GET",
+										url: "php/pingJia.php",
+										data: {"p_id":id,"depj":"depj"},
+										dataType: "json",
+								success: function(res) {
+									that.$message({
+										message: '删除成功',
+										type: 'success'
+									});
+									that.phonePj = "";
+									that.getPingJia();
+								},
+						});
+				},
+				getPingJia(){
+					var that = this;
+					// var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+					// 	if(!user){
+					// 			return;
+					// 	}
+						$.ajax({
+								type: "GET",
+										url: "php/pingJia.php",
+										data: {"productId":that.pid,"search":"search"},
+										dataType: "json",
+								success: function(res) {
+									that.pingJiaData = res.data;
+									that.pingJiaData.forEach(element => {
+										var date = new Date(element.pingJiaDate);  
+										element.pingJiaDate=date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+									});
+								},
+						});
+				},
+				gatAddressData(){
+						var that = this;
+						var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+						if(!user){
+								return;
+						}
+						$.ajax({
+								type: "GET",
+										url: "php/detail.php",
+										data: {"userId":user.userId,"getAddressdata":"getAddressdata"},
+										dataType: "json",
+								success: function(res) {
+										that.jsonAddressData = res.data;
+										if(!res.data.length) return;
+										that.form.address = res.data[0].userAddress ? res.data[0].userAddress : "河南省郑州市二七区";
+										that.form.userName = res.data[0].getUserName ? res.data[0].getUserName : "";
+										that.form.mobile = res.data[0].userPhone ? res.data[0].userPhone : "";
+								},
+						});
+				},
 				gatData() {
 					var that = this;
 					$.ajax({
@@ -220,22 +344,6 @@
 			             dataType: "json",
 						success: function(res) {
 							that.jsonData = res.data[0];
-						},
-					});
-				},
-				gatAddressData(){
-					var that = this;
-					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
-					if(!user){
-						return;
-					}
-					$.ajax({
-						type: "GET",
-			             url: "php/detail.php",
-			             data: {"userId":user.userId,"getAddressdata":"getAddressdata"},
-			             dataType: "json",
-						success: function(res) {
-							that.jsonAddressData = res.data;
 						},
 					});
 				},
@@ -323,7 +431,7 @@
 						$.ajax({
 							type: "GET",
 				             url: "php/detail.php",
-				             data: {"pid":that.pid,"userId":user.userId,"p_class":that.jsonData.p_class,"p_name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"my_address":that.form.address,"user_name":that.form.userName,"user_mobile":that.form.mobile,"p_color":that.radio_color,"p_version":that.radio_v,"orderDate":orderDate,"orderCode":Date.parse(new Date())},
+				             data: {"pid":that.pid,"userId":user.userId,"p_class":that.jsonData.p_class,"p_name":that.jsonData.name,"price":that.jsonData.price,"img":that.jsonData.img,"jianJie":that.jsonData.jianJie,"my_address":that.form.address,"user_name":that.form.userName,"user_mobile":that.form.mobile,"p_color":that.radio_color,"p_version":that.radio_v,"orderDate":orderDate,"orderCode":Date.parse(new Date()),"shifu":that.jsonData.price,"userName":user.userName},
 				             dataType: "json",
 							success: function(res) {
 								if(res.resultCode == 200){
@@ -332,6 +440,7 @@
 							          type: 'success'
 							       });
 									// that.jiFen();
+									that.dialogVisibleOrder = false;
 									that.sales(that.pid);
 								}else if(res.resultCode == "00"){
 									that.$message({
@@ -422,6 +531,13 @@
 					// 		that.jsonData = res.data;
 					// 	},
 					// });
+				},
+				//uuid
+				uuid () {
+				function _s4(){
+						return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+					}
+				return _s4() + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + '-' + _s4() + _s4() + _s4();
 				},
 			}
 		})

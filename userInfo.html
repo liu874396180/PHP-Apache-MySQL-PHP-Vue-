@@ -41,10 +41,10 @@
     </div>
     <div class="login-main">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <!-- 修改昵称 -->
-            <el-tab-pane label="修改昵称" name="first">
+            <!-- 修改用户名 -->
+            <el-tab-pane label="修改用户名" name="first">
                 <el-form>
-                    <el-form-item label="昵称" label-width="50px">
+                    <el-form-item label="用户名" label-width="55px">
                         <el-input v-model="userName" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
@@ -71,8 +71,14 @@
                     <el-form-item label="新增地址" label-width="68px">
                         <el-input v-model="userAddress"  autocomplete="off"></el-input>
                     </el-form-item>
+                    <el-form-item label="收货人" label-width="68px">
+                        <el-input v-model="getUserName"  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号" label-width="68px">
+                        <el-input v-model="userPhone"  autocomplete="off"></el-input>
+                    </el-form-item>
                 </el-form>
-                <el-button type="primary" plain style="width: 19%;" @click="saveAddress">保存</el-button>
+                <el-button type="primary" plain style="width: 19%;" @click="saveAddress('save')">保存</el-button>
             </el-tab-pane>
             <!-- 收货地址管理 -->
             <el-tab-pane label="收货地址管理" name="five">
@@ -83,17 +89,45 @@
 						prop="userAddress"
 						label="地址"
 						>
+                    </el-table-column>
+                    <el-table-column
+						prop="getUserName"
+						label="收货人"
+						>
+                    </el-table-column>
+                    <el-table-column
+						prop="userPhone"
+						label="手机号"
+						>
 					</el-table-column>
 					<el-table-column
 						label="操作"
-						>
+                        >
 						<template slot-scope="scope">
+                            <a href="javascript:void(0)" style="color:#1989fa" @click="changeM(scope.row)">修改</a>
 							<a href="javascript:void(0)" style="color:#1989fa" @click="deletAddress(scope.row.userAddress)">删除</a>
 						</template>
 					</el-table-column>
 					</el-table>
             </el-tab-pane>
         </el-tabs>
+        <el-dialog title="修改默认地址" :visible.sync="dialogFormVisiblemorenaddress">
+        <el-form :model="form">
+            <el-form-item label="收货地址" :label-width="formLabelWidth">
+            <el-input v-model="form.userAddress" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="收货人" :label-width="formLabelWidth">
+            <el-input v-model="form.getUserName" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="手机号" :label-width="formLabelWidth">
+            <el-input v-model="form.userPhone" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisiblemorenaddress = false">取 消</el-button>
+            <el-button type="primary" @click="sureSave">确 定</el-button>
+        </div>
+        </el-dialog>
     </div>
 </div>
 </body>
@@ -104,6 +138,13 @@
         el: '#userinfo',
         data: {
             jsonData: [],
+            formLabelWidth:"150px",
+            form:{
+                userAddress:"",
+                getUserName:"",
+                userPhone:""
+            },
+            dialogFormVisiblemorenaddress:false,
             userName:JSON.parse(window.sessionStorage.user).userName,
             userId:JSON.parse(window.sessionStorage.user).userId,
             activeName: 'first',
@@ -112,6 +153,9 @@
             newPassword:"",
             newPassword2:"",
             userAddress:"",
+            getUserName:"",
+            userPhone:"",
+            dataid:"",
             jsonAddressData:[]
         },
         created() {
@@ -120,6 +164,24 @@
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
+            },
+            sureSave(){
+                if(!(/^1[34578]\d{9}$/.test(this.form.userPhone))){ 
+                    alert("手机号码有误，请重填");  
+                    return false; 
+                } 
+                this.userAddress = this.form.userAddress;
+                this.userPhone = this.form.userPhone;
+                this.getUserName = this.form.getUserName;
+                this.saveAddress('change')
+            },
+            changeM(res){
+                var that = this;
+                that.dialogFormVisiblemorenaddress = true;
+                that.form.userAddress=res.userAddress;
+                that.form.getUserName=res.getUserName;
+                that.form.userPhone=res.userPhone;
+                that.dataid = res.dataid;
             },
             gatData() {
                 var that = this;
@@ -252,28 +314,40 @@
                     }
                 });
             },
-            saveAddress(){
+            saveAddress(setType){
                 var that = this;
-                if(!this.userAddress){
+                if(!this.userAddress || !this.userPhone || !this.getUserName){
                     that.$message({
-                        message: "地址不能为空",
+                        message: "请填写完成",
                         type: 'warning'
                     });
                     return;
                 }
+                if(!(/^1[34578]\d{9}$/.test(this.userPhone))){ 
+                    alert("手机号码有误，请重填");  
+                    return false; 
+                } 
+                if(setType == "save"){
+                    var sendData = {"userAddress":that.userAddress,"addUserAddress":"addUserAddress","userId":that.userId,"userPhone":that.userPhone,"getUserName":that.getUserName,"type":setType,"dataid":Date.parse(new Date())}
+                }else{
+                    var sendData = {"userAddress":that.userAddress,"addUserAddress":"addUserAddress","userId":that.userId,"userPhone":that.userPhone,"getUserName":that.getUserName,"type":setType,"dataid":that.dataid}
+                }
                 $.ajax({
                     type: "GET",
                      url: "php/index.php",
-                     data: {"userAddress":that.userAddress,"addUserAddress":"addUserAddress","userId":that.userId},
+                     data: sendData,
                      dataType: "json",
                     success: function(data) {
                         if(data.resultCode==200){
                             that.$message({
-                                message: "添加地址成功",
+                                message: "设置成功",
                                 type: 'success'
                             });
                             that.userAddress = "";
+                            that.userPhone = "";
+                            that.getUserName = "";
                             that.gatAddressData();
+                            that.dialogFormVisiblemorenaddress = false;
                         }else if(data.resultCode==0001){
                             that.$message({
                                 message: data.message,
@@ -283,8 +357,17 @@
                         
                     }
                 });
-            }
-
+            },
+            formatDate(now) {
+				var year = now.getFullYear();
+				var month = now.getMonth() + 1;
+				var date = now.getDate();
+				var hour = now.getHours();
+				var minute = now.getMinutes();
+				var second = now.getSeconds();
+				// return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second; 
+				return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+			},
         }
     })
 </script>

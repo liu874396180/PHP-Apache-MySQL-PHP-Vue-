@@ -86,7 +86,7 @@
 							</li>
 							<li id="honor" class="">
 								<a href="rycw.html" target="_blank">
-									<span>荣耀畅玩系列</span>
+									<span>华为畅享系列</span>
 								</a>
 							</li>
 							<li id="honor" class="">
@@ -130,13 +130,13 @@
 					</tr>
 				</table> -->
 			<el-table :data="jsonData" style="width: 100%">
-				<el-table-column label="主图" width="180">
+				<el-table-column label="主图">
 					<template slot-scope="scope">
 						<a :href="`detail.html?id=${scope.row.id}`">
 							<img :src="'sas/upload/'+scope.row.img" alt=""></a>
 					</template>
 				</el-table-column>
-				<el-table-column prop="name" label="手机名称" width="180">
+				<el-table-column prop="name" label="手机名称">
 				</el-table-column>
 				<el-table-column prop="price" label="价格">
 				</el-table-column>
@@ -146,7 +146,12 @@
 				</el-table-column>
 				<el-table-column prop="p_color" label="颜色">
 				</el-table-column>
-				<el-table-column label="操作" width="180">
+				<el-table-column prop="p_num" label="数量" width="180">
+					<template slot-scope="scope" >
+						<el-input-number style="width: 138px" v-model="scope.row.p_num" @change="handleChange($event,scope.row)" :min="1" :max="20" label="描述文字"></el-input-number>
+					</template>
+				</el-table-column>
+				<el-table-column label="操作">
 					<template slot-scope="scope">
 						<a href="javascript:void(0)" style="color:#1989fa" @click="delet(scope.row.id)">删除</a>
 						<a href="javascript:void(0)" style="color:#1989fa" @click="toOrder(scope.row)">下单</a>
@@ -173,6 +178,22 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="dialog_order = false">取 消</el-button>
+				<el-button type="primary" @click="dialogVisibleOrder = true;dialog_order = false">确 定</el-button>
+			</span>
+		</el-dialog>
+		<el-dialog
+			title="确认下单"
+			:visible.sync="dialogVisibleOrder"
+			width="30%"
+			>
+			<p>{{orderInfoData.name}} ({{orderInfoData.jianJie}})</p>
+			<p>单价：  {{orderInfoData.price}} ({{orderInfoData.p_color}}--{{orderInfoData.p_version}})</p>
+			<p>收货地址: {{form.address}}</p>
+			<p>收货人: {{form.userName}}</p>
+			<p>手机号: {{form.mobile}}</p>
+			<p style="color:red">实付: ￥{{orderInfoData.price * orderInfoData.p_num}}</p>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisibleOrder = false">取 消</el-button>
 				<el-button type="primary" @click="sure_order">确 定</el-button>
 			</span>
 		</el-dialog>
@@ -180,8 +201,7 @@
 		<div id="footer">
 			<div class="foot">
 				<!--<p class="foot_logo"><img src="static/image/flogo.png" /></p>-->
-				<p class="">隐私声明 服务协议 Copyright © 2012-2018 华为软件技术有限公司 版权所有 保留一切权利公安备案<br /> 苏公网安备32011402010009号
-					增值电信业务经营许可证：苏B2-20130048号</p>
+				<p class="">Designed and developed by chenwei huo.<br /> Copyright © 2010-2019 chenwei.com. All Rights Reserved.</p>
 				<p class=""></p>
 			</div>
 		</div>
@@ -200,6 +220,7 @@
 			radio_color: "1",
 			radio_v: "1",
 			searchVal:"",
+			dialogVisibleOrder:false,
 			dialog_order: false, //下单弹窗
 			jsonAddressData: [],
 			orderInfoData: {}, // 暂存 下单数据
@@ -211,6 +232,44 @@
 			this.gatAddressData()
 		},
 		methods: {
+			handleChange(value,data) {
+				console.log(value);
+				console.log(data);
+				var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+				var that = this;
+				$.ajax({
+					type: "GET",
+					url: "php/car.php",
+					data: { "userId": JSON.parse(window.sessionStorage.user).userId ,"p_num":value,"pid":data.id,"changePnum":"changePnum"},
+					dataType: "json",
+					success: function (data) {
+						console.log("数量修改成功")
+					},
+				});
+			},
+			gatAddressData(){
+					var that = this;
+					var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) :"";
+					if(!user){
+						this.$message({
+							message: '请先登录',
+							type: 'warning'
+						});
+							return;
+					}
+					$.ajax({
+							type: "GET",
+									url: "php/detail.php",
+									data: {"userId":user.userId,"getAddressdata":"getAddressdata"},
+									dataType: "json",
+							success: function(res) {
+									that.jsonAddressData = res.data;
+									that.form.address = res.data[0].userAddress ? res.data[0].userAddress : "河南省郑州市二七区";
+									that.form.userName = res.data[0].getUserName ? res.data[0].getUserName : "";
+									that.form.mobile = res.data[0].userPhone ? res.data[0].userPhone : "";
+							},
+					});
+			},
 			gatData() {
 				var that = this;
 				$.ajax({
@@ -273,22 +332,6 @@
 					});
 				}
 			},
-			gatAddressData() {
-				var that = this;
-				var user = window.sessionStorage.user ? JSON.parse(window.sessionStorage.user) : "";
-				if (!user) {
-					return;
-				}
-				$.ajax({
-					type: "GET",
-					url: "php/detail.php",
-					data: { "userId": user.userId, "getAddressdata": "getAddressdata" },
-					dataType: "json",
-					success: function (res) {
-						that.jsonAddressData = res.data;
-					},
-				});
-			},
 			toOrder(arg) {
 				this.dialog_order = true;
 				this.orderInfoData = arg;
@@ -314,7 +357,7 @@
 				$.ajax({
 					type: "GET",
 					url: "php/detail.php",
-					data: { "pid": that.orderInfoData.id, "userId": user.userId, "p_class": that.orderInfoData.p_class, "p_name": that.orderInfoData.name, "price": that.orderInfoData.price, "img": that.orderInfoData.img, "jianJie": that.orderInfoData.jianJie, "my_address": that.form.address, "user_name": that.form.userName, "user_mobile": that.form.mobile, "p_color": that.orderInfoData.p_color, "p_version": that.orderInfoData.p_version, "orderDate": orderDate, "orderCode": Date.parse(new Date()) },
+					data: { "pid": that.orderInfoData.id, "userId": user.userId, "p_class": that.orderInfoData.p_class, "p_name": that.orderInfoData.name, "price": that.orderInfoData.price, "img": that.orderInfoData.img, "jianJie": that.orderInfoData.jianJie, "my_address": that.form.address, "user_name": that.form.userName, "user_mobile": that.form.mobile, "p_color": that.orderInfoData.p_color, "p_version": that.orderInfoData.p_version, "orderDate": orderDate, "orderCode": Date.parse(new Date()),"shifu": that.orderInfoData.price*that.orderInfoData.p_num,"userName":user.userName},
 					dataType: "json",
 					success: function (res) {
 						if (res.resultCode == 200) {
@@ -323,6 +366,7 @@
 								type: 'success'
 							});
 							// that.jiFen();
+							that.dialogVisibleOrder = false;
 							that.sales(that.orderInfoData.id);
 						} else if (res.resultCode == "00") {
 							that.$message({
