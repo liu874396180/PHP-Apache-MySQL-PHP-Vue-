@@ -417,9 +417,9 @@
 					var that = this;
 					$.ajax({
 						type: "GET",
-			             url: "php/index.php",
-			             data: {"searchall":"searchall"},
-			             dataType: "json",
+						url: "php/index.php",
+						data: {"searchall":"searchall"},
+						dataType: "json",
 						success: function(res) {
 							that.jsonData = res.data;
 						},
