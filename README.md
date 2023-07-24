@@ -1,4 +1,8 @@
 # PHP-Apache-MySQL-PHP-Vue-jq
+
+[![liu874396180's github stats](https://github-readme-stats.vercel.app/api?username=liu874396180&show_icons=true "![Anurag's github stats")](https://github.com/anuraghazra/github-readme-stats)
+
+
 > 前端仿华为商城布局，带后台管理，后端php，前端vue+jq+html+css+elementui
 
 1. 后台需要php环境，参考（图文）最详细的XAMPP的安装及使用教程[可参考](https://blog.csdn.net/qq_36595013/article/details/80373597)
